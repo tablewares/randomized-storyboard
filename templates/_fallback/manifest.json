@@ -1,0 +1,23 @@
+{
+  "key": "_fallback",
+  "description": "Primitive text-only card used when no other template scores above THRESHOLD.",
+  "capacity": { "minChars": 0, "maxChars": 100000 },
+  "embedding": [0, 0, 0, 0, 0, 0, 0, 0],
+  "maxLayoutJitterPx": 0,
+  "assetSlots": {},
+  "layoutVariants": [
+    {
+      "name": "centered",
+      "boundingBoxes": {
+        "text": { "x": 80, "y": 800, "w": 920, "h": 320 }
+      }
+    }
+  ],
+  "styleVariants": [
+    {
+      "name": "plain",
+      "colors": { "background": "#111318", "text": "#F5F5F5" },
+      "fontFamily": "Arial, sans-serif"
+    }
+  ]
+}

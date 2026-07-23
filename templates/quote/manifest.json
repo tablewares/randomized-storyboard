@@ -1,0 +1,38 @@
+{
+  "key": "quote",
+  "description": "Full-bleed background image with a large centered quote and attribution.",
+  "capacity": { "minChars": 0, "maxChars": 220 },
+  "embedding": [0.81, 0.12, 0.44, 0.05, 0.63, 0.09, 0.71, 0.02],
+  "maxLayoutJitterPx": 10,
+  "assetSlots": {
+    "background": "assets/bg-quote.jpg"
+  },
+  "layoutVariants": [
+    {
+      "name": "centered",
+      "boundingBoxes": {
+        "quoteText": { "x": 120, "y": 700, "w": 840, "h": 420 },
+        "attribution": { "x": 120, "y": 1150, "w": 840, "h": 80 }
+      }
+    },
+    {
+      "name": "lower-third",
+      "boundingBoxes": {
+        "quoteText": { "x": 100, "y": 1000, "w": 880, "h": 380 },
+        "attribution": { "x": 100, "y": 1400, "w": 880, "h": 80 }
+      }
+    }
+  ],
+  "styleVariants": [
+    {
+      "name": "light-on-dark",
+      "colors": { "text": "#FAF7F2", "attribution": "#D9CFC2", "overlay": "rgba(10,10,12,0.45)" },
+      "fontFamily": "Georgia, serif"
+    },
+    {
+      "name": "warm-serif",
+      "colors": { "text": "#FFF6E9", "attribution": "#E7C9A9", "overlay": "rgba(30,18,10,0.5)" },
+      "fontFamily": "Palatino, serif"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "key": "image-panel",
+  "description": "Split layout: media panel (image or video) alongside a caption panel.",
+  "capacity": { "minChars": 0, "maxChars": 160 },
+  "embedding": [0.15, 0.77, 0.22, 0.66, 0.08, 0.51, 0.19, 0.60],
+  "maxLayoutJitterPx": 8,
+  "assetSlots": {
+    "media": "assets/panel-default.jpg"
+  },
+  "layoutVariants": [
+    {
+      "name": "media-top",
+      "boundingBoxes": {
+        "media": { "x": 0, "y": 0, "w": 1080, "h": 1100 },
+        "caption": { "x": 60, "y": 1150, "w": 960, "h": 500 }
+      }
+    },
+    {
+      "name": "media-left",
+      "boundingBoxes": {
+        "media": { "x": 0, "y": 0, "w": 1080, "h": 960 },
+        "caption": { "x": 60, "y": 1020, "w": 960, "h": 640 }
+      }
+    }
+  ],
+  "styleVariants": [
+    {
+      "name": "clean-light",
+      "colors": { "captionBg": "#FFFFFF", "captionText": "#141414" },
+      "fontFamily": "Inter, sans-serif"
+    },
+    {
+      "name": "clean-dark",
+      "colors": { "captionBg": "#141414", "captionText": "#F5F5F5" },
+      "fontFamily": "Inter, sans-serif"
+    }
+  ]
+}
