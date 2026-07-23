@@ -3,6 +3,7 @@ import { bundle } from "@remotion/bundler";
 import { renderMedia, selectComposition } from "@remotion/renderer";
 import { FPS, VIDEO_WIDTH, VIDEO_HEIGHT } from "../config.js";
 import { runPipelinesOneAndTwo } from "../index.js";
+import { loadStoryboard } from "../pipeline1/storyboard.js";
 
 // Optional: point at a pre-installed Chrome/Chromium headless-shell binary
 // instead of letting Remotion download its own (useful in sandboxed/offline
@@ -14,21 +15,29 @@ const browserExecutable = process.env.REMOTION_BROWSER_EXECUTABLE || undefined;
  * "MainVideo" composition against our hydrated input props (so
  * calculateMetadata can compute the exact duration), then render it out.
  *
- * @param {{ voiceoverSegments: Array, voiceConfig: Object, outputPath?: string }} args
+ * @param {{ voiceoverSegments: Array, voiceConfig: Object, outputPath?: string, fps?: number, width?: number, height?: number }} args
  */
-export async function renderVideo({ voiceoverSegments, voiceConfig, outputPath }) {
+export async function renderVideo({
+  voiceoverSegments,
+  voiceConfig,
+  outputPath,
+  fps = FPS,
+  width = VIDEO_WIDTH,
+  height = VIDEO_HEIGHT,
+}) {
   // Pipelines 1 + 2: timing, scoring, and hydration.
   const { hydratedScenes, totalDurationInFrames } = runPipelinesOneAndTwo(
     voiceoverSegments,
-    voiceConfig
+    voiceConfig,
+    fps
   );
 
   const inputProps = {
     hydratedScenes,
     totalDurationInFrames,
-    fps: FPS,
-    width: VIDEO_WIDTH,
-    height: VIDEO_HEIGHT,
+    fps,
+    width,
+    height,
   };
 
   // Bundle the Remotion entry point (webpack build of src/pipeline3/index.jsx).
@@ -71,25 +80,56 @@ export async function renderVideo({ voiceoverSegments, voiceConfig, outputPath }
   return finalOutputPath;
 }
 
-// Allow running as a script: `node src/pipeline3/render.js`
-  const exampleVoiceoverSegments = [
-    { id: "s0", type: "quote", text: "The best way to predict the future is to invent it." },
-    { id: "s1", type: "image-panel", text: "A quiet morning by the lake." },
-  ];
-  const exampleVoiceConfig = { workDir: '.', voiceId: "george", speed: 1, alignment: {
+/**
+ * New entrypoint: renders a video straight from a storyboard JSON file on
+ * disk, instead of requiring callers to hand-build the
+ * `{ voiceoverSegments, voiceConfig }` object in code.
+ *
+ * Authoring guide + schema: skills/storyboard-json/SKILL.md
+ * (skills/storyboard-json/references/schema.md for the full field reference).
+ *
+ * @param {string} storyboardFilePath  Path to a *.storyboard.json file.
+ * @param {{ outputPath?: string }} [overrides]  Optional overrides, e.g. a
+ *        CLI-supplied output path that should win over the one in the file.
+ * @returns {Promise<string>} path to the rendered mp4
+ */
+export async function renderVideoFromStoryboardFile(storyboardFilePath, overrides = {}, vc) {
+  const storyboard = loadStoryboard(storyboardFilePath);
+
+  return renderVideo({
+    voiceoverSegments: storyboard.voiceoverSegments,
+    voiceConfig: vc ,
+    outputPath: overrides.outputPath || storyboard.outputPath,
+    fps: storyboard.fps,
+    width: storyboard.width,
+    height: storyboard.height,
+  });
+}
+
+// Allow running as a script:
+//   node src/pipeline3/render.js path/to/scene.storyboard.json [outputPath]
+// Falls back to a small hard-coded example if no storyboard path is given.
+  const [, , storyboardArg, outputArg] = process.argv;
+  const vc = { workDir: '.', voiceId: "george", speed: 1, alignment: {
           model: "small",
         language:  "en",
         device:  "cpu",
         computeType: "int8",
-  } };
+    } };
+  const renderPromise = storyboardArg
+    ? renderVideoFromStoryboardFile(storyboardArg, { outputPath: outputArg }, vc)
+    : renderVideo({
+        voiceoverSegments: [
+          { id: "s0", type: "quote", text: "The best way to predict the future is to invent it." },
+          { id: "s1", type: "image-panel", text: "A quiet morning by the lake." },
+        ],
+        voiceConfig: {}
+      });
+  
 
-  renderVideo({
-    voiceoverSegments: exampleVoiceoverSegments,
-    voiceConfig: exampleVoiceConfig,
-  })
+  renderPromise
     .then((outPath) => console.log(`Rendered video to: ${outPath}`))
     .catch((err) => {
       console.error("Render failed:", err);
       process.exit(1);
     });
-

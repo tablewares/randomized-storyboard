@@ -12,18 +12,14 @@ import { FPS } from "./config.js";
  * @param {number} fps
  * @returns {{ hydratedScenes: Array, totalDurationInFrames: number }}
  */
-export function runPipelinesOneAndTwo(voiceoverSegments, voiceConfig, fps = FPS) {
-  // --- Pipeline 1 ---
-  const a = computeSceneFrameTimings(voiceoverSegments, voiceConfig, fps).then((sceneTimings)=> {
-    console.log("sceneTimings", sceneTimings)
-    const matchedScenes = matchScenesToTemplates(sceneTimings);
-      const hydratedScenes = hydrateAllScenes(matchedScenes);
+export async function runPipelinesOneAndTwo(voiceoverSegments, voiceConfig, fps = FPS) {
+  // Wait for scene timings to resolve
+  const sceneTimings = await computeSceneFrameTimings(voiceoverSegments, voiceConfig, fps);
+  
+  // Synchronous transformations
+  const matchedScenes = matchScenesToTemplates(sceneTimings);
+  const hydratedScenes = hydrateAllScenes(matchedScenes);
+  const totalDurationInFrames = getTotalDurationInFrames(sceneTimings);
 
-    const totalDurationInFrames = getTotalDurationInFrames(sceneTimings);
-
-    return { hydratedScenes, totalDurationInFrames };
-  });
-  return a
-
+  return { hydratedScenes, totalDurationInFrames };
 }
-
