@@ -26,12 +26,12 @@ export async function renderVideo({
   height = VIDEO_HEIGHT,
 }) {
   // Pipelines 1 + 2: timing, scoring, and hydration.
-  const { hydratedScenes, totalDurationInFrames } = runPipelinesOneAndTwo(
+  const { hydratedScenes, totalDurationInFrames } = await runPipelinesOneAndTwo(
     voiceoverSegments,
     voiceConfig,
     fps
   );
-
+  console.log("hydratedScenes",hydratedScenes, "totalDurationInFrames ",totalDurationInFrames);
   const inputProps = {
     hydratedScenes,
     totalDurationInFrames,
@@ -93,12 +93,12 @@ export async function renderVideo({
  *        CLI-supplied output path that should win over the one in the file.
  * @returns {Promise<string>} path to the rendered mp4
  */
-export async function renderVideoFromStoryboardFile(storyboardFilePath, overrides = {}, vc) {
+export async function renderVideoFromStoryboardFile(storyboardFilePath, vc, overrides = {}) {
   const storyboard = loadStoryboard(storyboardFilePath);
-
-  return renderVideo({
+  console.log(storyboard);
+  return  renderVideo({
     voiceoverSegments: storyboard.voiceoverSegments,
-    voiceConfig: vc ,
+    voiceConfig: vc,
     outputPath: overrides.outputPath || storyboard.outputPath,
     fps: storyboard.fps,
     width: storyboard.width,
@@ -109,27 +109,78 @@ export async function renderVideoFromStoryboardFile(storyboardFilePath, override
 // Allow running as a script:
 //   node src/pipeline3/render.js path/to/scene.storyboard.json [outputPath]
 // Falls back to a small hard-coded example if no storyboard path is given.
-  const [, , storyboardArg, outputArg] = process.argv;
-  const vc = { workDir: '.', voiceId: "george", speed: 1, alignment: {
+import { parseArgs } from "node:util";
+const vc = { workDir: '.', voiceId: "george", speed: 1, alignment: {
           model: "small",
         language:  "en",
         device:  "cpu",
         computeType: "int8",
     } };
-  const renderPromise = storyboardArg
-    ? renderVideoFromStoryboardFile(storyboardArg, { outputPath: outputArg }, vc)
-    : renderVideo({
-        voiceoverSegments: [
-          { id: "s0", type: "quote", text: "The best way to predict the future is to invent it." },
-          { id: "s1", type: "image-panel", text: "A quiet morning by the lake." },
-        ],
-        voiceConfig: {}
-      });
-  
 
-  renderPromise
-    .then((outPath) => console.log(`Rendered video to: ${outPath}`))
-    .catch((err) => {
-      console.error("Render failed:", err);
-      process.exit(1);
+const {
+  values: {
+    storyboard,
+    output,
+    demo,
+  },
+} = parseArgs({
+  options: {
+    storyboard: {
+      type: "string",
+      short: "s",
+    },
+    output: {
+      type: "string",
+      short: "o",
+    },
+    demo: {
+      type: "boolean",
+      default: false,
+    },
+  },
+});
+
+async function main() {
+  if (storyboard) {
+    const out = await renderVideoFromStoryboardFile(storyboard, vc, {
+      outputPath: output,
     });
+
+    console.log(`Rendered video to: ${out}`);
+    return;
+  }
+
+  if (demo) {
+    const out = await renderVideo({
+      voiceoverSegments: [
+        {
+          id: "s0",
+          type: "quote",
+          text: "The best way to predict the future is to invent it.",
+        },
+        {
+          id: "s1",
+          type: "image-panel",
+          text: "A quiet morning by the lake.",
+        },
+      ],
+      voiceConfig: vc
+    });
+
+    console.log(`Rendered video to: ${out}`);
+    return;
+  }
+
+  console.log(`
+Usage:
+
+  node render.js --storyboard storyboard.json
+  node render.js --storyboard storyboard.json --output video.mp4
+  node render.js --demo
+`);
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
