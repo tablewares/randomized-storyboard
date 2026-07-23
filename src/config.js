@@ -12,9 +12,10 @@ export const THRESHOLD = Number(process.env.TEMPLATE_MATCH_THRESHOLD) || 0.62;
 
 // Weighting applied to each signal inside the scoring engine. Must sum to 1.
 export const SCORING_WEIGHTS = {
-  exactKey: 0.4,
-  charCapacity: 0.25,
-  cosineSimilarity: 0.35,
+  exactKey: 0.35,
+  charCapacity: 0.2,
+  cosineSimilarity: 0.25,
+  keywordMatch: 0.2,
 };
 
 // Deterministic seed root. Combined with sceneIndex -> seedrandom(masterSeed + "_" + sceneIndex)

@@ -2,7 +2,7 @@
   "key": "quote",
   "description": "Full-bleed background image with a large centered quote and attribution.",
   "capacity": { "minChars": 0, "maxChars": 220 },
-  "embedding": [0.81, 0.12, 0.44, 0.05, 0.63, 0.09, 0.71, 0.02],
+  "keywords": ["quote", "quotation", "saying", "attribution", "author", "cite", "wisdom", "proverb", "aphorism", "testimonial"],
   "maxLayoutJitterPx": 10,
   "assetSlots": {
     "background": "assets/bg-quote.jpg"

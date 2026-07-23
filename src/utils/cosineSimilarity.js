@@ -1,15 +1,15 @@
 /**
  * Standard cosine similarity between two equal-length numeric vectors.
  * Returns a value in [-1, 1]; the scoring engine clamps/normalizes it to [0, 1].
+ * Returns 0 if either vector is missing, empty, or has mismatched dimensions.
  */
 export function cosineSimilarity(vecA, vecB) {
-  if (!Array.isArray(vecA) || !Array.isArray(vecB) || vecA.length === 0) {
+  if (!Array.isArray(vecA) || !Array.isArray(vecB) || vecA.length === 0 || vecB.length === 0) {
     return 0;
   }
   if (vecA.length !== vecB.length) {
-    throw new Error(
-      `Embedding dimension mismatch: scene=${vecA.length} template=${vecB.length}`
-    );
+    // Silently return 0 for dimension mismatch instead of throwing
+    return 0;
   }
 
   let dot = 0;

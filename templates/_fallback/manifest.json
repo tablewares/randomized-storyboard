@@ -2,7 +2,7 @@
   "key": "_fallback",
   "description": "Primitive text-only card used when no other template scores above THRESHOLD.",
   "capacity": { "minChars": 0, "maxChars": 100000 },
-  "embedding": [0, 0, 0, 0, 0, 0, 0, 0],
+  "keywords": ["fallback", "text", "plain", "default", "catch-all"],
   "maxLayoutJitterPx": 0,
   "assetSlots": {},
   "layoutVariants": [

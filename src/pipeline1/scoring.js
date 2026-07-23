@@ -16,10 +16,34 @@ import {
 } from "../paths.js";
 
 /**
- * Scores a single scene against a single template using three signals:
+ * Computes keyword match score between scene keywords and template keywords.
+ * Returns a score in [0, 1] based on Jaccard similarity of keyword sets.
+ */
+function keywordMatchScore(scene, manifest) {
+  const sceneKeywords = Array.isArray(scene.keywords) ? scene.keywords : [];
+  const templateKeywords = Array.isArray(manifest.keywords) ? manifest.keywords : [];
+
+  if (sceneKeywords.length === 0 || templateKeywords.length === 0) {
+    return 0;
+  }
+
+  // Normalize keywords to lowercase for case-insensitive matching
+  const sceneSet = new Set(sceneKeywords.map(k => k.toLowerCase().trim()));
+  const templateSet = new Set(templateKeywords.map(k => k.toLowerCase().trim()));
+
+  // Jaccard similarity: intersection / union
+  const intersection = [...sceneSet].filter(k => templateSet.has(k)).length;
+  const union = new Set([...sceneSet, ...templateSet]).size;
+
+  return union > 0 ? intersection / union : 0;
+}
+
+/**
+ * Scores a single scene against a single template using four signals:
  *   a) exact key match       (scene.type === manifest.key)
  *   b) character capacity    (scene text length fits manifest.capacity range)
  *   c) cosine similarity     (scene.embedding vs manifest.embedding)
+ *   d) keyword matching      (scene.keywords vs manifest.keywords)
  *
  * Returns a composite score in [0, 1].
  */
@@ -52,14 +76,18 @@ export function scoreSceneAgainstTemplate(scene, template) {
       ? normalizedCosine(scene.embedding, manifest.embedding)
       : 0;
 
+  // (d) Keyword matching between scene keywords and template keywords
+  const keywordScore = keywordMatchScore(scene, manifest);
+
   const composite =
     exactKeyScore * SCORING_WEIGHTS.exactKey +
     charCapacityScore * SCORING_WEIGHTS.charCapacity +
-    cosineScore * SCORING_WEIGHTS.cosineSimilarity;
+    cosineScore * SCORING_WEIGHTS.cosineSimilarity +
+    keywordScore * SCORING_WEIGHTS.keywordMatch;
 
   return {
     composite,
-    breakdown: { exactKeyScore, charCapacityScore, cosineScore },
+    breakdown: { exactKeyScore, charCapacityScore, cosineScore, keywordScore },
   };
 }
 
@@ -85,7 +113,7 @@ function findBestMatch(scene, templates) {
  *      to the primitive fallback template.
  *
  * @param {Array} scenesWithTiming  Output of computeSceneFrameTimings(), each
- *                                  scene may optionally carry an `embedding`.
+ *                                  scene may optionally carry an `embedding` and/or `keywords`.
  * @returns {Array} scenes annotated with `matchedTemplate` and `matchScore`.
  */
 export function matchScenesToTemplates(scenesWithTiming) {

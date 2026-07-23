@@ -20,9 +20,10 @@ Consumed by `src/pipeline1/storyboard.js` (`loadStoryboard`), called from
 | Field            | Type            | Required | Notes |
 |------------------|-----------------|----------|-------|
 | `id`             | string          | **yes**  | Stable scene identifier. Shows up in `unmatched_scenes.json` and Remotion `<Sequence>` keys. |
-| `text`           | string          | **yes**  | The voiceover line for this scene. Drives both timing (via `getSceneTimings`) and template scoring (char-capacity fit + optional cosine similarity). |
-| `type`           | string \| null  | no       | Should match a template's `manifest.key` (e.g. `"quote"`, `"image-panel"`) for an exact-key score boost. Leave `null`/omitted to rely on capacity + cosine similarity alone. |
+| `text`           | string          | **yes**  | The voiceover line for this scene. Drives both timing (via `getSceneTimings`) and template scoring (char-capacity fit + optional cosine similarity + keyword matching). |
+| `type`           | string \| null  | no       | Should match a template's `manifest.key` (e.g. `"quote"`, `"image-panel"`) for an exact-key score boost. Leave `null`/omitted to rely on capacity + cosine similarity + keyword matching alone. |
 | `embedding`      | number[]        | no       | Scene embedding for cosine similarity against `manifest.embedding`. **Must have the same length as the template manifests' embeddings** (`cosineSimilarity` throws `Embedding dimension mismatch` otherwise — see `src/utils/cosineSimilarity.js`). Only include this if you're actually generating embeddings; there's no benefit to a placeholder vector. |
+| `keywords`       | string[]        | no       | **Array of descriptive keywords for this scene** (e.g. `["quote", "inspiration", "wisdom"]`). Used for keyword matching against template `manifest.keywords` via Jaccard similarity. Combined with cosine similarity and exact-key matching for composite scoring. Recommended as a lightweight alternative to embeddings. |
 | `media`          | object          | no       | Maps an asset-slot name (from the matched template's `manifest.assetSlots`, e.g. `background`, `media`) to a remote URL. Must start with `http://` or `https://` to be treated as a remote override (`src/pipeline2/templating.js`'s `resolveAssetUrl`) — anything else is ignored and the template's local `/assets` file is used instead. |
 | `styleOverrides` | object          | no       | Shallow-merged **on top of** the template's chosen style variant in `hydrateScene` (`src/pipeline2/templating.js`). Use the same keys the template's `manifest.json` `styleVariants[].colors`/`fontFamily` use — check the specific template's manifest for what it actually reads. |
 
@@ -31,7 +32,7 @@ Consumed by `src/pipeline1/storyboard.js` (`loadStoryboard`), called from
 See `references/example.storyboard.json` in this same folder for a
 ready-to-copy storyboard exercising every optional field, including one
 scene deliberately designed to miss every template match (no `type`, an
-`embedding` far from any manifest's) to show what a fallback-bound scene
+`embedding` far from any manifest's, no `keywords`) to show what a fallback-bound scene
 looks like.
 
 ## What happens after loading
