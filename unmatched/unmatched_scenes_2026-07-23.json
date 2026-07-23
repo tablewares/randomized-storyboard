@@ -1,0 +1,46 @@
+[
+  {
+    "sceneId": "s0",
+    "sceneIndex": 0,
+    "text": "I hate people who are always right.",
+    "bestPrimaryScore": 0.55,
+    "bestPrimaryKey": "quote",
+    "bestSecondaryScore": null,
+    "bestSecondaryKey": null,
+    "threshold": 0.62,
+    "timestamp": "2026-07-23T22:01:29.016Z"
+  },
+  {
+    "sceneId": "s1",
+    "sceneIndex": 1,
+    "text": "A quiet morning by the lake, birds calling across still water.",
+    "bestPrimaryScore": 0.55,
+    "bestPrimaryKey": "image-panel",
+    "bestSecondaryScore": null,
+    "bestSecondaryKey": null,
+    "threshold": 0.62,
+    "timestamp": "2026-07-23T22:01:29.016Z"
+  },
+  {
+    "sceneId": "s2",
+    "sceneIndex": 2,
+    "text": "This scene deliberately has no matching template key, so the scoring engine falls back to cosine similarity, and if that's still weak, to the primitive fallback template.",
+    "bestPrimaryScore": 0.5375,
+    "bestPrimaryKey": "image-panel",
+    "bestSecondaryScore": null,
+    "bestSecondaryKey": null,
+    "threshold": 0.62,
+    "timestamp": "2026-07-23T22:01:29.016Z"
+  },
+  {
+    "sceneId": "s3",
+    "sceneIndex": 3,
+    "text": "A powerful quote about perseverance and never giving up on your dreams.",
+    "bestPrimaryScore": 0.55,
+    "bestPrimaryKey": "quote",
+    "bestSecondaryScore": null,
+    "bestSecondaryKey": null,
+    "threshold": 0.62,
+    "timestamp": "2026-07-23T22:01:29.016Z"
+  }
+]

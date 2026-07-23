@@ -14,4 +14,11 @@ export const PRIMARY_TEMPLATE_ROOT = path.join(__dirname, "..", "templates");
 export const SECONDARY_TEMPLATE_ROOT = path.join(__dirname, "..", "templates-secondary");
 
 // Where scenes that fail to match anywhere get logged.
-export const UNMATCHED_LOG_PATH = path.join(__dirname, "..", "unmatched_scenes.json");
+const date = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+
+export const UNMATCHED_LOG_PATH = path.join(
+  __dirname,
+  "..",
+  "unmatched",
+  `unmatched_scenes_${date}.json`
+);

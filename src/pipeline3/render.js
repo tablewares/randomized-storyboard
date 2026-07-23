@@ -31,7 +31,6 @@ export async function renderVideo({
     voiceConfig,
     fps
   );
-  console.log("hydratedScenes",hydratedScenes, "totalDurationInFrames ",totalDurationInFrames);
   const inputProps = {
     hydratedScenes,
     totalDurationInFrames,
@@ -95,7 +94,6 @@ export async function renderVideo({
  */
 export async function renderVideoFromStoryboardFile(storyboardFilePath, vc, overrides = {}) {
   const storyboard = loadStoryboard(storyboardFilePath);
-  console.log(storyboard);
   return  renderVideo({
     voiceoverSegments: storyboard.voiceoverSegments,
     voiceConfig: vc,

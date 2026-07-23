@@ -18,12 +18,10 @@ const WORDS_PER_SECOND = 150 / 60;
 export async function getSceneTimings(voiceoverSegments = [], voiceConfig = {}) {
   // Destructure config properties while supporting both legacy voiceConfig structures and workDir params
   const {  workDir, voice, alignment = {}, speed = 1 } = voiceConfig;
-  console.log("voiceconfig", voiceConfig)
 
   // --- PATH 1: Dynamic Synthesis + WhisperX Alignment ---
   if (workDir) {
     const resolvedWorkDir = path.resolve(workDir);
-    console.log("workdir", resolvedWorkDir);
     const pythonpath = path.join(resolvedWorkDir, "src", "existing")
     // Extract raw text strings for full text synthesis and storyboard alignment
     const sceneTexts = voiceoverSegments.map((segment) => segment.text || "");

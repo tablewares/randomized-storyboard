@@ -131,7 +131,6 @@ export function matchScenesToTemplates(scenesWithTiming) {
   }
 
   const unmatchedRecords = [];
-  console.log("scenewithtiming", scenesWithTiming)
   const resolvedScenes = scenesWithTiming.map((scene) => {
     const primaryBest = findBestMatch(scene, primaryTemplates);
 
