@@ -42,5 +42,49 @@
     "bestSecondaryKey": null,
     "threshold": 0.62,
     "timestamp": "2026-07-23T22:01:29.016Z"
+  },
+  {
+    "sceneId": "s0",
+    "sceneIndex": 0,
+    "text": "The best way to predict the future is to invent it.",
+    "bestPrimaryScore": 0.55,
+    "bestPrimaryKey": "quote",
+    "bestSecondaryScore": null,
+    "bestSecondaryKey": null,
+    "threshold": 0.62,
+    "timestamp": "2026-07-23T22:49:57.531Z"
+  },
+  {
+    "sceneId": "s1",
+    "sceneIndex": 1,
+    "text": "A quiet morning by the lake.",
+    "bestPrimaryScore": 0.55,
+    "bestPrimaryKey": "image-panel",
+    "bestSecondaryScore": null,
+    "bestSecondaryKey": null,
+    "threshold": 0.62,
+    "timestamp": "2026-07-23T22:49:57.531Z"
+  },
+  {
+    "sceneId": "s0",
+    "sceneIndex": 0,
+    "text": "The best way to predict the future is to invent it.",
+    "bestPrimaryScore": 0.55,
+    "bestPrimaryKey": "quote",
+    "bestSecondaryScore": null,
+    "bestSecondaryKey": null,
+    "threshold": 0.62,
+    "timestamp": "2026-07-23T22:58:13.124Z"
+  },
+  {
+    "sceneId": "s1",
+    "sceneIndex": 1,
+    "text": "A quiet morning by the lake.",
+    "bestPrimaryScore": 0.55,
+    "bestPrimaryKey": "image-panel",
+    "bestSecondaryScore": null,
+    "bestSecondaryKey": null,
+    "threshold": 0.62,
+    "timestamp": "2026-07-23T22:58:13.124Z"
   }
 ]

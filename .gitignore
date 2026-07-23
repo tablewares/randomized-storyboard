@@ -3,3 +3,4 @@
 **/.venv/
 .remotion/
 unmatched_scenes.json
+unmatched/

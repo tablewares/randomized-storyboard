@@ -8,7 +8,7 @@ export const FPS = Number(process.env.VIDEO_FPS) || 30;
 
 // Minimum acceptable score (0..1) for a template match before falling back
 // to the secondary template root / primitive fallback.
-export const THRESHOLD = Number(process.env.TEMPLATE_MATCH_THRESHOLD) || 0.62;
+export const THRESHOLD = 0;
 
 // Weighting applied to each signal inside the scoring engine. Must sum to 1.
 export const SCORING_WEIGHTS = {
