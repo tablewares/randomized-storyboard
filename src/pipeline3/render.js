@@ -4,7 +4,7 @@ import { renderMedia, selectComposition } from "@remotion/renderer";
 import { FPS, VIDEO_WIDTH, VIDEO_HEIGHT } from "../config.js";
 import { runPipelinesOneAndTwo } from "../index.js";
 import { loadStoryboard } from "../pipeline1/storyboard.js";
-
+import { generateTemplateRegistry } from './regenerate-registry.mjs'
 // Optional: point at a pre-installed Chrome/Chromium headless-shell binary
 // instead of letting Remotion download its own (useful in sandboxed/offline
 // environments where the download host isn't reachable).
@@ -139,6 +139,7 @@ const {
 });
 
 async function main() {
+  generateTemplateRegistry();
   if (storyboard) {
     const out = await renderVideoFromStoryboardFile(storyboard, vc, {
       outputPath: output,

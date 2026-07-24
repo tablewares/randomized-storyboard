@@ -1,0 +1,54 @@
+{
+  "key": "stat-highlight",
+  "description": "Big single-number or short-stat callout with a supporting label, for emphasizing a data point or key fact",
+  "capacity": { "minChars": 0, "maxChars": 60 },
+  "keywords": ["stat", "statistic", "number", "data", "metric", "highlight", "callout", "fact", "figure", "percentage"],
+  "maxLayoutJitterPx": 4,
+  "assetSlots": {
+    "background": "assets/stat-bg.jpg"
+  },
+  "layoutVariants": [
+    {
+      "name": "centered",
+      "boundingBoxes": {
+        "eyebrow": { "x": 90, "y": 620, "w": 900, "h": 60 },
+        "stat": { "x": 40, "y": 700, "w": 1000, "h": 420 },
+        "label": { "x": 140, "y": 1150, "w": 800, "h": 160 }
+      }
+    },
+    {
+      "name": "upper-third",
+      "boundingBoxes": {
+        "eyebrow": { "x": 90, "y": 220, "w": 900, "h": 60 },
+        "stat": { "x": 40, "y": 300, "w": 1000, "h": 420 },
+        "label": { "x": 140, "y": 750, "w": 800, "h": 160 }
+      }
+    }
+  ],
+  "styleVariants": [
+    {
+      "name": "anthropic-light",
+      "colors": {
+        "background": "#F5F1EB",
+        "eyebrow": "#CC785C",
+        "stat": "#1F1B16",
+        "label": "#6C6A63",
+        "rule": "#D9D3C7",
+        "shadow": "rgba(31,27,22,0.12)"
+      },
+      "fontFamily": "'Tiempos Headline', Georgia, 'Times New Roman', serif"
+    },
+    {
+      "name": "anthropic-dark",
+      "colors": {
+        "background": "#1F1B16",
+        "eyebrow": "#E8927C",
+        "stat": "#F5F1EB",
+        "label": "#B8B2A5",
+        "rule": "#3A352C",
+        "shadow": "rgba(0,0,0,0.4)"
+      },
+      "fontFamily": "'Tiempos Headline', Georgia, 'Times New Roman', serif"
+    }
+  ]
+}

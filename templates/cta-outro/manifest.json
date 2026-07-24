@@ -1,0 +1,56 @@
+{
+  "key": "cta-outro",
+  "description": "Closing call-to-action or outro screen with a headline, short supporting line, and optional wordmark/logo",
+  "capacity": { "minChars": 0, "maxChars": 120 },
+  "keywords": ["cta", "outro", "closing", "end", "call to action", "subscribe", "learn more", "wrap up", "signoff"],
+  "maxLayoutJitterPx": 4,
+  "assetSlots": {
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Claude_AI_symbol.svg/500px-Claude_AI_symbol.svg.png"
+  },
+  "layoutVariants": [
+    {
+      "name": "centered-stack",
+      "boundingBoxes": {
+        "logo": { "x": 390, "y": 260, "w": 300, "h": 90 },
+        "headline": { "x": 100, "y": 800, "w": 880, "h": 380 },
+        "subtext": { "x": 160, "y": 1220, "w": 760, "h": 140 },
+        "chip": { "x": 340, "y": 1420, "w": 400, "h": 90 }
+      }
+    },
+    {
+      "name": "bottom-weighted",
+      "boundingBoxes": {
+        "logo": { "x": 390, "y": 160, "w": 300, "h": 90 },
+        "headline": { "x": 100, "y": 1000, "w": 880, "h": 320 },
+        "subtext": { "x": 160, "y": 1360, "w": 760, "h": 120 },
+        "chip": { "x": 340, "y": 1540, "w": 400, "h": 90 }
+      }
+    }
+  ],
+  "styleVariants": [
+    {
+      "name": "anthropic-light",
+      "colors": {
+        "background": "#F5F1EB",
+        "headline": "#1F1B16",
+        "subtext": "#6C6A63",
+        "chipBg": "#CC785C",
+        "chipText": "#F5F1EB",
+        "shadow": "rgba(31,27,22,0.12)"
+      },
+      "fontFamily": "'Tiempos Headline', Georgia, 'Times New Roman', serif"
+    },
+    {
+      "name": "anthropic-dark",
+      "colors": {
+        "background": "#1F1B16",
+        "headline": "#F5F1EB",
+        "subtext": "#B8B2A5",
+        "chipBg": "#E8927C",
+        "chipText": "#1F1B16",
+        "shadow": "rgba(0,0,0,0.4)"
+      },
+      "fontFamily": "'Tiempos Headline', Georgia, 'Times New Roman', serif"
+    }
+  ]
+}

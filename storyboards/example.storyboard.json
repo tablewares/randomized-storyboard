@@ -14,27 +14,7 @@
       "styleOverrides": {
         "colors": { "text": "#FAF7F2", "attribution": "#D9CFC2", "overlay": "rgba(10,10,12,0.5)" }
       }
-    },
-    {
-      "id": "s1",
-      "type": "image-panel",
-      "text": "A quiet morning by the lake, birds calling across still water.",
-      "keywords": ["image", "photo", "nature", "landscape", "water", "lake", "morning", "birds", "peaceful"],
-      "media": {
-        "media": "https://images.example.com/lake-morning.jpg"
-      }
-    },
-    {
-      "id": "s2",
-      "type": "image-panel",
-      "text": "This scene deliberately has no matching template key, so the scoring engine falls back to cosine similarity, and if that's still weak, to the primitive fallback template.",
-      "embedding": [0.1, 0.2, 0.05, 0.4, 0.3, 0.02, 0.15, 0.09]
-    },
-    {
-      "id": "s3",
-      "type": "quote",
-      "text": "A powerful quote about perseverance and never giving up on your dreams.",
-      "keywords": ["quote", "motivation", "perseverance", "dreams", "inspiration", "success", "mindset"]
     }
+    
   ]
 }

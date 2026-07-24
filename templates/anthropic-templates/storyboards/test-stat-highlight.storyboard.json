@@ -1,0 +1,11 @@
+{
+  "voiceConfig": { "voiceId": "narrator-1", "speed": 1 },
+  "voiceoverSegments": [
+    {
+      "id": "s0",
+      "type": "stat-highlight",
+      "text": "92%",
+      "subtitle": "of teams shipped faster after switching workflows"
+    }
+  ]
+}
