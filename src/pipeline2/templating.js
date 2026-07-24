@@ -93,6 +93,20 @@ export function hydrateScene(scene) {
     ])
   );
 
+  // Collect all dynamic content fields from the scene (everything except known metadata fields)
+  const METADATA_FIELDS = new Set([
+    "id", "sceneIndex", "type", "text", "startFrame", "endFrame", "durationInFrames",
+    "fps", "embedding", "keywords", "media", "styleOverrides", "matchedTemplate",
+    "matchScore", "matchBreakdown", "matchSource"
+  ]);
+
+  const dynamicContent = {};
+  for (const [k, v] of Object.entries(scene)) {
+    if (!METADATA_FIELDS.has(k) && v !== undefined) {
+      dynamicContent[k] = v;
+    }
+  }
+
   return {
     sceneId: scene.id,
     sceneIndex: scene.sceneIndex,
@@ -112,6 +126,8 @@ export function hydrateScene(scene) {
     matchScore: scene.matchScore,
     // deterministic seed string, exposed for debugging / reproducibility
     seed: `${scene.sceneIndex}`,
+    // Dynamic content fields (subtitle, attribution, title, etc.) passed through to template
+    content: dynamicContent,
   };
 }
 

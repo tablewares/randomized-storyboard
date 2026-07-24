@@ -13,7 +13,7 @@ const WORDS_PER_SECOND = 150 / 60;
  * @param {string} [voiceConfig.workDir] - Directory for intermediate files. Required to trigger dynamic alignment.
  * @param {Object} [voiceConfig.voice] - Specific voice configuration parameters passed to `synthesizeVoice`.
  * @param {Object} [voiceConfig.alignment] - WhisperX options (model, language, device, compute_type).
- * @returns {Promise<Array<{ id: string, start: number, end: number, text: string, type: string }>>}
+ * @returns {Promise<Array<{ id: string, start: number, end: number, text: string, type: string, ... }>>}
  */
 export async function getSceneTimings(voiceoverSegments = [], voiceConfig = {}) {
   // Destructure config properties while supporting both legacy voiceConfig structures and workDir params
@@ -69,16 +69,14 @@ export async function getSceneTimings(voiceoverSegments = [], voiceConfig = {}) 
       const end = sceneEndTimes[index] !== undefined ? sceneEndTimes[index] : currentStart;
       const start = currentStart;
       currentStart = end;
+      // Pass through ALL segment fields (including dynamic content like subtitle, attribution, etc.)
       return {
         id: segment.id,
         start,
         end,
         text: segment.text,
         type: segment.type,
-        media: segment.media,        // pass through media overrides
-        keywords: segment.keywords,  // pass through keywords for scoring
-        embedding: segment.embedding, // pass through embeddings for scoring
-        styleOverrides: segment.styleOverrides, // pass through style overrides
+        ...segment, // spread all original segment fields (subtitle, attribution, media, keywords, embedding, styleOverrides, etc.)
       };
     });
   }
@@ -94,16 +92,14 @@ export async function getSceneTimings(voiceoverSegments = [], voiceConfig = {}) 
     const end = cursor + durationSeconds;
     cursor = end;
 
+    // Pass through ALL segment fields
     return {
       id: segment.id,
       start,
       end,
       text: segment.text,
       type: segment.type,
-      media: segment.media,
-      keywords: segment.keywords,
-      embedding: segment.embedding,
-      styleOverrides: segment.styleOverrides,
+      ...segment,
     };
   });
 }

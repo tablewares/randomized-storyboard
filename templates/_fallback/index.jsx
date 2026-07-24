@@ -8,7 +8,7 @@ import { AbsoluteFill } from "remotion";
  * resolve during rendering.
  */
 export default function FallbackTemplate({ layout }) {
-  const { boundingBoxes, style, text } = layout;
+  const { boundingBoxes, style, text, content } = layout;
 
   return (
     <AbsoluteFill style={{ backgroundColor: style.colors?.background }}>

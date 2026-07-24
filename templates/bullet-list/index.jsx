@@ -4,14 +4,14 @@ import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "rem
 /**
  * Bullet List template.
  * Expects a fully hydrated layout payload (see pipeline2/templating.js):
- *   { text, boundingBoxes: { title?, items }, style, assets, durationInFrames }
+ *   { text, boundingBoxes: { title?, items }, style, assets, durationInFrames, content: { title?, ... } }
  * 
  * The text field should contain newline-separated bullet points.
  * e.g. "• First point\n• Second point\n• Third point"
  */
 export default function BulletListTemplate({ layout }) {
   const frame = useCurrentFrame();
-  const { boundingBoxes, style, assets, text, durationInFrames } = layout;
+  const { boundingBoxes, style, assets, text, durationInFrames, content } = layout;
 
   const opacity = interpolate(frame, [0, 15], [0, 1], { extrapolateRight: "clamp" });
   const fadeOutStart = Math.max(durationInFrames - 15, 0);
@@ -39,6 +39,9 @@ export default function BulletListTemplate({ layout }) {
     ? text.split("\n").filter(line => line.trim().length > 0)
     : [];
 
+  // Get title from dynamic content if provided
+  const title = content?.title;
+
   return (
     <AbsoluteFill style={{ backgroundColor: style.colors?.background || "#141414" }}>
       {backgroundUrl && (
@@ -48,8 +51,8 @@ export default function BulletListTemplate({ layout }) {
         />
       )}
 
-      {/* Title - if title region exists in boundingBoxes */}
-      {boundingBoxes.title && (
+      {/* Title - if title region exists in boundingBoxes AND we have a title */}
+      {boundingBoxes.title && title && (
         <div
           style={{
             position: "absolute",
@@ -69,7 +72,7 @@ export default function BulletListTemplate({ layout }) {
             textAlign: "center",
           }}
         >
-          {text.split("\n")[0]} {/* First line as title */}
+          {title}
         </div>
       )}
 

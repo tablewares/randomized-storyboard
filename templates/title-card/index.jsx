@@ -4,11 +4,11 @@ import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "rem
 /**
  * Title Card template.
  * Expects a fully hydrated layout payload (see pipeline2/templating.js):
- *   { text, subtitle?, boundingBoxes: { title, subtitle? }, style, assets, durationInFrames }
+ *   { text, boundingBoxes: { title, subtitle? }, style, assets, durationInFrames, content: { subtitle?, ... } }
  */
-export default function TitleCardTemplate({ layout, subtitle }) {
+export default function TitleCardTemplate({ layout }) {
   const frame = useCurrentFrame();
-  const { boundingBoxes, style, assets, text, durationInFrames } = layout;
+  const { boundingBoxes, style, assets, text, durationInFrames, content } = layout;
 
   const opacity = interpolate(frame, [0, 15], [0, 1], { extrapolateRight: "clamp" });
   const fadeOutStart = Math.max(durationInFrames - 15, 0);
@@ -23,6 +23,9 @@ export default function TitleCardTemplate({ layout, subtitle }) {
       ? staticFile(backgroundAsset.url)
       : backgroundAsset.url
     : null;
+
+  // Get subtitle from dynamic content
+  const subtitle = content?.subtitle;
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#000" }}>

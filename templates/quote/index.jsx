@@ -4,11 +4,11 @@ import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "rem
 /**
  * Quote template.
  * Expects a fully hydrated layout payload (see pipeline2/templating.js):
- *   { text, boundingBoxes: { quoteText, attribution }, style, assets, durationInFrames }
+ *   { text, boundingBoxes: { quoteText, attribution }, style, assets, durationInFrames, content: { attribution?, ... } }
  */
-export default function QuoteTemplate({ layout, attribution }) {
+export default function QuoteTemplate({ layout }) {
   const frame = useCurrentFrame();
-  const { boundingBoxes, style, assets, text, durationInFrames } = layout;
+  const { boundingBoxes, style, assets, text, durationInFrames, content } = layout;
 
   const opacity = interpolate(frame, [0, 15], [0, 1], { extrapolateRight: "clamp" });
   const fadeOutStart = Math.max(durationInFrames - 15, 0);
@@ -23,6 +23,9 @@ export default function QuoteTemplate({ layout, attribution }) {
       ? staticFile(backgroundAsset.url)
       : backgroundAsset.url
     : null;
+
+  // Get attribution from dynamic content (or fallback to layout.attribution for backwards compat)
+  const attribution = content?.attribution ?? layout.attribution;
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#000" }}>

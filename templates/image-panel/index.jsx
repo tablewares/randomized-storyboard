@@ -14,9 +14,12 @@ function isVideoAsset(url) {
  * Renders either <Img /> or <OffthreadVideo /> for the media slot depending
  * on the resolved asset's file extension, so both local and remote media
  * URLs never block or time out during renderMedia().
+ * 
+ * Expects a fully hydrated layout payload (see pipeline2/templating.js):
+ *   { text, boundingBoxes: { media, caption }, style, assets, content: { ... } }
  */
 export default function ImagePanelTemplate({ layout }) {
-  const { boundingBoxes, style, assets, text } = layout;
+  const { boundingBoxes, style, assets, text, content } = layout;
   const mediaAsset = assets.media;
   const mediaUrl = mediaAsset?.url
     ? mediaAsset.source === "local"
@@ -24,6 +27,9 @@ export default function ImagePanelTemplate({ layout }) {
       : mediaAsset.url
     : null;
   const isVideo = isVideoAsset(mediaAsset?.url);
+
+  // Support additional dynamic content fields
+  const caption = content?.caption ?? text;
 
   return (
     <AbsoluteFill style={{ backgroundColor: style.colors?.captionBg }}>
@@ -37,8 +43,8 @@ export default function ImagePanelTemplate({ layout }) {
           overflow: "hidden",
         }}
       >
-        {mediaUrl &&
-          (isVideo ? (
+        {mediaUrl && (
+          isVideo ? (
             <OffthreadVideo
               src={mediaUrl}
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
@@ -48,7 +54,8 @@ export default function ImagePanelTemplate({ layout }) {
               src={mediaUrl}
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
-          ))}
+          )
+        )}
       </div>
 
       <div
@@ -63,7 +70,7 @@ export default function ImagePanelTemplate({ layout }) {
           color: style.colors?.captionText,
         }}
       >
-        {text}
+        {caption}
       </div>
     </AbsoluteFill>
   );
