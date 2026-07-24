@@ -1,0 +1,73 @@
+{
+  "voiceConfig": { "voiceId": "narrator-1", "speed": 1 },
+  "fps": 30,
+  "outputPath": "out/bullet-list-test.mp4",
+  "voiceoverSegments": [
+    {
+      "id": "s0",
+      "type": "title-card",
+      "text": "5 Tips for Better Sleep",
+      "subtitle": "Science-backed habits that actually work",
+      "keywords": ["title", "intro", "sleep", "tips", "health"],
+      "media": {
+        "background": "https://images.example.com/sleep-bg.jpg"
+      }
+    },
+    {
+      "id": "s1",
+      "type": "bullet-list",
+      "text": "Stick to a consistent sleep schedule — even on weekends",
+      "keywords": ["list", "schedule", "consistency", "circadian", "routine"],
+      "media": {
+        "background": "https://images.example.com/schedule-bg.jpg",
+        "icon": "https://images.example.com/check-icon.png"
+      }
+    },
+    {
+      "id": "s2",
+      "type": "bullet-list",
+      "text": "Keep your bedroom cool, dark, and quiet",
+      "keywords": ["environment", "temperature", "darkness", "noise", "bedroom"],
+      "media": {
+        "background": "https://images.example.com/bedroom-bg.jpg"
+      }
+    },
+    {
+      "id": "s3",
+      "type": "bullet-list",
+      "text": "Avoid caffeine after 2 PM and limit alcohol before bed",
+      "keywords": ["caffeine", "alcohol", "timing", "stimulants", "nutrition"],
+      "media": {
+        "background": "https://images.example.com/coffee-bg.jpg"
+      }
+    },
+    {
+      "id": "s4",
+      "type": "bullet-list",
+      "text": "Wind down with a screen-free ritual 30 minutes before sleep",
+      "keywords": ["wind-down", "screens", "blue-light", "ritual", "relaxation"],
+      "media": {
+        "background": "https://images.example.com/phone-bg.jpg"
+      }
+    },
+    {
+      "id": "s5",
+      "type": "bullet-list",
+      "text": "Get morning sunlight within 30 minutes of waking",
+      "keywords": ["sunlight", "morning", "circadian", "melatonin", "wake"],
+      "media": {
+        "background": "https://images.example.com/sun-bg.jpg"
+      }
+    },
+    {
+      "id": "s6",
+      "type": "quote",
+      "text": "Sleep is the single most effective thing we can do to reset our brain and body health each day.",
+      "attribution": "— Matthew Walker, PhD",
+      "keywords": ["quote", "sleep", "health", "science", "wisdom", "attribution"],
+      "media": {
+        "background": "https://images.example.com/quote-bg.jpg"
+      }
+    }
+  ]
+}

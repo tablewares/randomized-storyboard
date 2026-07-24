@@ -29,7 +29,7 @@ export async function computeSceneFrameTimings(voiceoverSegments, voiceConfig, f
   let previousEndFrame = 0;
 
   return rawTimings.map((timing, index) => {
-    const { id, start, end, text, type } = timing;
+    const { id, start, end, text, type, ...rest } = timing;
 
     if (typeof start !== "number" || typeof end !== "number" || end <= start) {
       throw new Error(
@@ -61,6 +61,7 @@ export async function computeSceneFrameTimings(voiceoverSegments, voiceConfig, f
       endFrame,
       durationInFrames,
       fps,
+      ...rest, // preserve media, keywords, embedding, styleOverrides, etc.
     };
   });
 }

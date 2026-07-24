@@ -5,7 +5,7 @@ import { alignAudioWords, alignStoryboardToTranscript } from "./whisperAlign.mjs
 const WORDS_PER_SECOND = 150 / 60;
 
 /**
- * Calculates scene timings either using actual TTS + WhisperX transcript alignment 
+ * Calculates scene timings either using actual TTS + WhisperX transcript alignment
  * (if `config.workDir` is provided) or falling back to a WPM-based estimate.
  *
  * @param {Array<Object>} voiceoverSegments - Array of objects with `{ id, text, type, ... }`
@@ -17,12 +17,12 @@ const WORDS_PER_SECOND = 150 / 60;
  */
 export async function getSceneTimings(voiceoverSegments = [], voiceConfig = {}) {
   // Destructure config properties while supporting both legacy voiceConfig structures and workDir params
-  const {  workDir, voice, alignment = {}, speed = 1 } = voiceConfig;
+  const { workDir, voice, alignment = {}, speed = 1 } = voiceConfig;
 
   // --- PATH 1: Dynamic Synthesis + WhisperX Alignment ---
   if (workDir) {
     const resolvedWorkDir = path.resolve(workDir);
-    const pythonpath = path.join(resolvedWorkDir, "src", "existing")
+    const pythonpath = path.join(resolvedWorkDir, "src", "existing");
     // Extract raw text strings for full text synthesis and storyboard alignment
     const sceneTexts = voiceoverSegments.map((segment) => segment.text || "");
     const fullText = sceneTexts.join(" ");
@@ -63,7 +63,7 @@ export async function getSceneTimings(voiceoverSegments = [], voiceConfig = {}) 
 
     // 3. Transform aligned end times back into the standard `getSceneTimings` output contract
     let currentStart = 0;
- 
+
     return voiceoverSegments.map((segment, index) => {
       // Use the aligned end time or default to current start if unavailable
       const end = sceneEndTimes[index] !== undefined ? sceneEndTimes[index] : currentStart;
@@ -75,6 +75,10 @@ export async function getSceneTimings(voiceoverSegments = [], voiceConfig = {}) 
         end,
         text: segment.text,
         type: segment.type,
+        media: segment.media,        // pass through media overrides
+        keywords: segment.keywords,  // pass through keywords for scoring
+        embedding: segment.embedding, // pass through embeddings for scoring
+        styleOverrides: segment.styleOverrides, // pass through style overrides
       };
     });
   }
@@ -96,6 +100,10 @@ export async function getSceneTimings(voiceoverSegments = [], voiceConfig = {}) 
       end,
       text: segment.text,
       type: segment.type,
+      media: segment.media,
+      keywords: segment.keywords,
+      embedding: segment.embedding,
+      styleOverrides: segment.styleOverrides,
     };
   });
 }

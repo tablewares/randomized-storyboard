@@ -10,11 +10,15 @@
 import QuoteTemplate from "../../templates/quote/index.jsx";
 import ImagePanelTemplate from "../../templates/image-panel/index.jsx";
 import FallbackTemplate from "../../templates/_fallback/index.jsx";
+import TitleCardTemplate from "../../templates/title-card/index.jsx";
+import BulletListTemplate from "../../templates/bullet-list/index.jsx";
 
 export const TEMPLATE_REGISTRY = {
   quote: QuoteTemplate,
   "image-panel": ImagePanelTemplate,
   _fallback: FallbackTemplate,
+  "title-card": TitleCardTemplate,
+  "bullet-list": BulletListTemplate,
 };
 
 export function resolveTemplateComponent(templateKey) {

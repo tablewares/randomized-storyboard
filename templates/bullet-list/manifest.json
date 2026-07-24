@@ -1,0 +1,51 @@
+{
+  "key": "bullet-list",
+  "description": "Vertical list of bullet points with optional icons/checkmarks. Great for key takeaways, steps, features, or lists.",
+  "capacity": { "minChars": 0, "maxChars": 300 },
+  "keywords": ["list", "bullets", "points", "steps", "features", "takeaways", "highlights", "checklist", "items", "enumeration"],
+  "maxLayoutJitterPx": 6,
+  "assetSlots": {
+    "background": "assets/bg-bullets.jpg",
+    "icon": "assets/icon-bullet.png"
+  },
+  "layoutVariants": [
+    {
+      "name": "centered",
+      "boundingBoxes": {
+        "title": { "x": 80, "y": 180, "w": 920, "h": 120 },
+        "items": { "x": 80, "y": 350, "w": 920, "h": 1300 }
+      }
+    },
+    {
+      "name": "left-aligned",
+      "boundingBoxes": {
+        "title": { "x": 60, "y": 150, "w": 960, "h": 120 },
+        "items": { "x": 100, "y": 320, "w": 880, "h": 1350 }
+      }
+    },
+    {
+      "name": "compact",
+      "boundingBoxes": {
+        "title": { "x": 80, "y": 200, "w": 920, "h": 100 },
+        "items": { "x": 80, "y": 330, "w": 920, "h": 1250 }
+      }
+    }
+  ],
+  "styleVariants": [
+    {
+      "name": "clean-light",
+      "colors": { "background": "#FFFFFF", "title": "#141414", "text": "#2D2D2D", "bullet": "#0066CC", "icon": "#0066CC" },
+      "fontFamily": "Inter, system-ui, sans-serif"
+    },
+    {
+      "name": "clean-dark",
+      "colors": { "background": "#141414", "title": "#F5F5F5", "text": "#DDDDDD", "bullet": "#66B2FF", "icon": "#66B2FF" },
+      "fontFamily": "Inter, system-ui, sans-serif"
+    },
+    {
+      "name": "warm-paper",
+      "colors": { "background": "#FDF8F0", "title": "#2D241A", "text": "#4A3D2E", "bullet": "#C4702C", "icon": "#C4702C" },
+      "fontFamily": "Merriweather, Georgia, serif"
+    }
+  ]
+}

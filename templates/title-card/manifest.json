@@ -1,0 +1,50 @@
+{
+  "key": "title-card",
+  "description": "Large centered title with optional subtitle and background image. Ideal for section headers, chapter breaks, or video intros/outros.",
+  "capacity": { "minChars": 0, "maxChars": 120 },
+  "keywords": ["title", "header", "heading", "chapter", "intro", "outro", "section", "title-card", "headline"],
+  "maxLayoutJitterPx": 8,
+  "assetSlots": {
+    "background": "assets/bg-title.jpg"
+  },
+  "layoutVariants": [
+    {
+      "name": "centered",
+      "boundingBoxes": {
+        "title": { "x": 80, "y": 700, "w": 920, "h": 300 },
+        "subtitle": { "x": 80, "y": 1050, "w": 920, "h": 120 }
+      }
+    },
+    {
+      "name": "top-heavy",
+      "boundingBoxes": {
+        "title": { "x": 60, "y": 300, "w": 960, "h": 400 },
+        "subtitle": { "x": 60, "y": 750, "w": 960, "h": 120 }
+      }
+    },
+    {
+      "name": "bottom-third",
+      "boundingBoxes": {
+        "title": { "x": 80, "y": 1200, "w": 920, "h": 280 },
+        "subtitle": { "x": 80, "y": 1550, "w": 920, "h": 100 }
+      }
+    }
+  ],
+  "styleVariants": [
+    {
+      "name": "bold-light",
+      "colors": { "title": "#FFFFFF", "subtitle": "#DDDDDD", "overlay": "rgba(0,0,0,0.5)", "shadow": "rgba(0,0,0,0.8)" },
+      "fontFamily": "Montserrat, Helvetica, Arial, sans-serif"
+    },
+    {
+      "name": "elegant-serif",
+      "colors": { "title": "#F5F0E8", "subtitle": "#D4C4A8", "overlay": "rgba(20,15,10,0.45)", "shadow": "rgba(0,0,0,0.6)" },
+      "fontFamily": "Playfair Display, Georgia, serif"
+    },
+    {
+      "name": "minimal-dark",
+      "colors": { "title": "#FFFFFF", "subtitle": "#AAAAAA", "overlay": "rgba(0,0,0,0.3)", "shadow": "rgba(0,0,0,0.5)" },
+      "fontFamily": "Inter, system-ui, sans-serif"
+    }
+  ]
+}
