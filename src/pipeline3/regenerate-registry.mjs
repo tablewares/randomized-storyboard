@@ -7,7 +7,9 @@ const __dirname = path.dirname(__filename);
 
 /**
  * Regenerates the Remotion template registry file based on available template directories.
- * 
+ * Supports nested template family folders (recursive discovery).
+ * Nested templates get keys prefixed with their folder path (e.g., "anthropic-templates-stat-highlight").
+ *
  * @param {Object} [options]
  * @param {string[]} [options.templateRoots] - Array of template root folder paths.
  * @param {string} [options.outputPath] - Path where templateRegistry.js should be saved.
@@ -23,41 +25,58 @@ export function generateTemplateRegistry(options = {}) {
   const outputPath = options.outputPath || path.join(__dirname, "templateRegistry.js");
   const silent = options.silent ?? false;
 
-  // Helper to discover templates inside a specific root directory
+  /**
+   * Recursively discovers templates inside a root directory.
+   * A template folder must contain both manifest.json and index.jsx.
+   * Template family folders can contain nested template folders recursively.
+   */
   function discoverTemplates(rootDir) {
-    if (!fs.existsSync(rootDir)) return [];
-
-    const entries = fs.readdirSync(rootDir, { withFileTypes: true });
     const templates = [];
 
-    for (const entry of entries) {
-      if (!entry.isDirectory()) continue;
+    function walk(dir, prefix = "") {
+      if (!fs.existsSync(dir)) return;
 
-      const tplDir = path.join(rootDir, entry.name);
-      const manifestPath = path.join(tplDir, "manifest.json");
-      const componentPath = path.join(tplDir, "index.jsx");
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
 
-      if (!fs.existsSync(manifestPath) || !fs.existsSync(componentPath)) continue;
+      for (const entry of entries) {
+        if (!entry.isDirectory()) continue;
 
-      let manifest;
-      try {
-        manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
-      } catch (e) {
-        continue;
+        const tplDir = path.join(dir, entry.name);
+        const manifestPath = path.join(tplDir, "manifest.json");
+        const componentPath = path.join(tplDir, "index.jsx");
+
+        // Check if this directory is a template (has both manifest.json and index.jsx)
+        if (fs.existsSync(manifestPath) && fs.existsSync(componentPath)) {
+          let manifest;
+          try {
+            manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
+          } catch (e) {
+            continue;
+          }
+
+          if (!manifest.key) continue;
+
+          // Create a unique key by prefixing with the folder path (excluding root)
+          // This allows nested templates with same name to coexist
+          const uniqueKey = prefix ? prefix + "-" + manifest.key : manifest.key;
+
+          // Calculate path relative to where the output file will live
+          const outputDir = path.dirname(outputPath);
+          let relComponentPath = path.relative(outputDir, componentPath).replace(/\\/g, "/");
+          if (!relComponentPath.startsWith(".")) {
+            relComponentPath = "./" + relComponentPath;
+          }
+
+          templates.push({ key: uniqueKey, originalKey: manifest.key, componentPath: relComponentPath, manifest });
+        }
+
+        // Always recurse into subdirectories (template family folders)
+        const newPrefix = prefix ? prefix + "-" + entry.name : entry.name;
+        walk(tplDir, newPrefix);
       }
-
-      if (!manifest.key) continue;
-
-      // Calculate path relative to where the output file will live
-      const outputDir = path.dirname(outputPath);
-      let relComponentPath = path.relative(outputDir, componentPath).replace(/\\/g, "/");
-      if (!relComponentPath.startsWith(".")) {
-        relComponentPath = "./" + relComponentPath;
-      }
-
-      templates.push({ key: manifest.key, componentPath: relComponentPath });
     }
 
+    walk(rootDir);
     return templates;
   }
 
@@ -89,6 +108,10 @@ export function generateTemplateRegistry(options = {}) {
  * every template that should be renderable MUST be registered here as well
  * -- discovery and rendering are deliberately decoupled.
  *
+ * Template discovery is recursive: template family folders can contain
+ * nested template folders, allowing hierarchical organization.
+ * Nested templates get keys prefixed with their folder path (e.g., "anthropic-templates-stat-highlight").
+ *
  * AUTO-GENERATED -- DO NOT EDIT MANUALLY.
  */
 ${imports}
@@ -116,7 +139,7 @@ export function resolveTemplateComponent(templateKey) {
     console.log("[templateRegistry] Regenerated " + outputPath);
     console.log("[templateRegistry] Registered " + allTemplates.length + " templates");
     for (const t of allTemplates) {
-      console.log("  - " + t.key);
+      console.log("  - " + t.key + (t.key !== t.originalKey ? " (was " + t.originalKey + ")" : ""));
     }
   }
 

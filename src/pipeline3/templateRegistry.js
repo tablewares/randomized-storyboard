@@ -5,9 +5,15 @@
  * every template that should be renderable MUST be registered here as well
  * -- discovery and rendering are deliberately decoupled.
  *
+ * Template discovery is recursive: template family folders can contain
+ * nested template folders, allowing hierarchical organization.
+ * Nested templates get keys prefixed with their folder path (e.g., "anthropic-templates-stat-highlight").
+ *
  * AUTO-GENERATED -- DO NOT EDIT MANUALLY.
  */
 import _fallbackTemplate from "../../templates/_fallback/index.jsx";
+import anthropictemplatesctaoutroTemplate from "../../templates/anthropic-templates/cta-outro/index.jsx";
+import anthropictemplatesstathighlightTemplate from "../../templates/anthropic-templates/stat-highlight/index.jsx";
 import bulletlistTemplate from "../../templates/bullet-list/index.jsx";
 import ctaoutroTemplate from "../../templates/cta-outro/index.jsx";
 import imagepanelTemplate from "../../templates/image-panel/index.jsx";
@@ -17,6 +23,8 @@ import titlecardTemplate from "../../templates/title-card/index.jsx";
 
 export const TEMPLATE_REGISTRY = {
   "_fallback": _fallbackTemplate,
+  "anthropic-templates-cta-outro": anthropictemplatesctaoutroTemplate,
+  "anthropic-templates-stat-highlight": anthropictemplatesstathighlightTemplate,
   "bullet-list": bulletlistTemplate,
   "cta-outro": ctaoutroTemplate,
   "image-panel": imagepanelTemplate,

@@ -23,41 +23,63 @@ export function resolveIndexEntry(folderPath) {
 }
 
 /**
- * Loads every valid template folder under a root directory, parsing each
- * manifest.json. Invalid folders (missing required members) are skipped
- * silently -- they are not templates, just stray files.
+ * Recursively loads every valid template folder under a root directory,
+ * parsing each manifest.json. Invalid folders (missing required members)
+ * are skipped silently -- they are not templates, just stray files.
+ * 
+ * Supports nested template family folders: templates can be organized in
+ * hierarchies like templates/family-name/template-name/
+ * 
+ * Nested templates get keys prefixed with their folder path (e.g., "anthropic-templates-stat-highlight")
+ * to ensure uniqueness and allow multiple versions of the same template.
  */
 export function loadTemplateManifests(rootDir) {
   if (!fs.existsSync(rootDir)) return [];
 
-  const entries = fs
-    .readdirSync(rootDir, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory());
-
   const templates = [];
 
-  for (const entry of entries) {
-    const folderPath = path.join(rootDir, entry.name);
-    if (!isValidTemplateFolder(folderPath)) continue;
+  function walk(dir, prefix = "") {
+    if (!fs.existsSync(dir)) return;
 
-    const manifestPath = path.join(folderPath, "manifest.json");
-    let manifest;
-    try {
-      manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
-    } catch (err) {
-      console.warn(`[templates] Failed to parse manifest at ${manifestPath}: ${err.message}`);
-      continue;
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+
+      const folderPath = path.join(dir, entry.name);
+
+      // Check if this directory is a valid template
+      if (isValidTemplateFolder(folderPath)) {
+        const manifestPath = path.join(folderPath, "manifest.json");
+        let manifest;
+        try {
+          manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
+        } catch (err) {
+          console.warn(`[templates] Failed to parse manifest at ${manifestPath}: ${err.message}`);
+          continue;
+        }
+
+        // Create a unique key by prefixing with the folder path (excluding root)
+        // This allows nested templates with same name to coexist
+        const uniqueKey = prefix ? prefix + "-" + (manifest.key || entry.name) : (manifest.key || entry.name);
+
+        templates.push({
+          key: uniqueKey,
+          originalKey: manifest.key || entry.name,
+          folderPath,
+          indexEntry: resolveIndexEntry(folderPath),
+          assetsDir: path.join(folderPath, "assets"),
+          manifest,
+        });
+      }
+
+      // Always recurse into subdirectories (template family folders)
+      const newPrefix = prefix ? prefix + "-" + entry.name : entry.name;
+      walk(folderPath, newPrefix);
     }
-
-    templates.push({
-      key: manifest.key || entry.name,
-      folderPath,
-      indexEntry: resolveIndexEntry(folderPath),
-      assetsDir: path.join(folderPath, "assets"),
-      manifest,
-    });
   }
 
+  walk(rootDir);
   return templates;
 }
 
