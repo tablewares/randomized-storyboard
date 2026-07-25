@@ -15,18 +15,18 @@
       "text": "Number one: always ship on time.",
       "sceneId": "scene-2",
       "startSec": 2.18,
-      "endSec": 4.9,
+      "endSec": 4.46,
       "start": 2.18,
-      "end": 4.9
+      "end": 4.46
     },
     {
       "id": "scene-3",
       "text": "As Steve Jobs once said, design is not just what it looks like.",
       "sceneId": "scene-3",
-      "startSec": 4.9,
-      "endSec": 9.290000000000001,
-      "start": 4.9,
-      "end": 9.290000000000001
+      "startSec": 4.46,
+      "endSec": 8.81,
+      "start": 4.46,
+      "end": 8.81
     }
   ],
   "templateSelections": [
@@ -34,7 +34,7 @@
       "sceneId": "scene-1",
       "templateId": "lists/basic",
       "family": "lists",
-      "score": null,
+      "score": 0.75,
       "scoreBreakdown": {
         "keyCoverage": 1,
         "charFit": 1,
@@ -48,7 +48,7 @@
       "sceneId": "scene-2",
       "templateId": "lists/basic",
       "family": "lists",
-      "score": null,
+      "score": 0.7000000000000001,
       "scoreBreakdown": {
         "keyCoverage": 1,
         "charFit": 1,
@@ -62,7 +62,7 @@
       "sceneId": "scene-3",
       "templateId": "quote/pull-quote",
       "family": "quote",
-      "score": null,
+      "score": 0.75,
       "scoreBreakdown": {
         "keyCoverage": 1,
         "charFit": 1,
@@ -73,6 +73,28 @@
       "transitionOut": "cut"
     }
   ],
-  "warnings": [],
+  "warnings": [
+    {
+      "sceneId": "scene-1",
+      "bestTemplateId": "lists/basic",
+      "score": 0.75,
+      "threshold": 0.8,
+      "reason": "Best available template \"lists/basic\" only scored 0.75, below threshold. Weakest dimension: keyword (0.00). Consider authoring a new template (or a new variation) that better supports this scene's content keys/keywords/length, or adjust the scene's content to fit an existing template."
+    },
+    {
+      "sceneId": "scene-2",
+      "bestTemplateId": "lists/basic",
+      "score": 0.7000000000000001,
+      "threshold": 0.8,
+      "reason": "Best available template \"lists/basic\" only scored 0.70, below threshold. Weakest dimension: keyword (0.00). Consider authoring a new template (or a new variation) that better supports this scene's content keys/keywords/length, or adjust the scene's content to fit an existing template."
+    },
+    {
+      "sceneId": "scene-3",
+      "bestTemplateId": "quote/pull-quote",
+      "score": 0.75,
+      "threshold": 0.8,
+      "reason": "Best available template \"quote/pull-quote\" only scored 0.75, below threshold. Weakest dimension: keyword (0.00). Consider authoring a new template (or a new variation) that better supports this scene's content keys/keywords/length, or adjust the scene's content to fit an existing template."
+    }
+  ],
   "templateRegistry": {}
 }

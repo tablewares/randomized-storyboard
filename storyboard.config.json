@@ -1,12 +1,13 @@
 {
   "outputDir": "./dist/output",
   "templatesRoot": "./templates",
-  "selectionThreshold": 0.1,
+  "selectionThreshold": 0.8,
   "skipRender": false,
   "scoringWeights": {
-    "semanticMatch": 0.5,
-    "pacingMatch": 0.3,
-    "styleMatch": 0.2
+    "keyCoverage": 0.4,
+    "charFit": 0.25,
+    "keyword": 0.25,
+    "familyHint": 0.1
   },
   "voicecfg": {
     "workDir": "." ,

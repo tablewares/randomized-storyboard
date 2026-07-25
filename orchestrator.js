@@ -58,7 +58,6 @@ export async function runStoryboardEngine(opts) {
   await writeFile(path.join(opts.outputDir, "render-input.json"), JSON.stringify(renderInput, null, 2));
 
   let videoPath;
-    console.log("renderinput", renderInput)
 
   if (!opts.skipRender) {
     videoPath = await renderStoryboardVideo(renderInput, {

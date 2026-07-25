@@ -70,9 +70,9 @@
         "text": "Number one: always ship on time.",
         "sceneId": "scene-2",
         "startSec": 2.18,
-        "endSec": 4.9,
+        "endSec": 4.46,
         "start": 2.18,
-        "end": 4.9
+        "end": 4.46
       },
       "contentWarnings": []
     },
@@ -104,10 +104,10 @@
         "id": "scene-3",
         "text": "As Steve Jobs once said, design is not just what it looks like.",
         "sceneId": "scene-3",
-        "startSec": 4.9,
-        "endSec": 9.290000000000001,
-        "start": 4.9,
-        "end": 9.290000000000001
+        "startSec": 4.46,
+        "endSec": 8.81,
+        "start": 4.46,
+        "end": 8.81
       },
       "contentWarnings": []
     }

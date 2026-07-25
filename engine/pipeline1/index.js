@@ -23,7 +23,7 @@ export const DEFAULT_TRANSITIONS = ["cut", "fade", "slide-left", "slide-up", "wi
 export async function runPipeline1(storyboard, config) {
   const {
     templateRegistry,
-    scoringWeights = DEFAULT_SCORING_WEIGHTS,
+    scoringWeights,
     embedder,
     selectionThreshold = 0.5,
     transitions = DEFAULT_TRANSITIONS,
@@ -37,7 +37,7 @@ export async function runPipeline1(storyboard, config) {
   // ---- 1. Voiceover synthesis + rough per-scene timing --------------------
   const segments = storyboard.scenes.map((s) => ({ id: s.id, text: s.voiceover }));
   const { audioPath, sceneTimings } = await synthesizeAndAlign(segments, voicecfg);
-  
+
   // ---- 2. Template selection per scene, via weighted scoring --------------
   const candidates = Array.from(templateRegistry.values());
   const templateSelections = [];
@@ -49,7 +49,6 @@ export async function runPipeline1(storyboard, config) {
       throw new Error(`No candidate templates available to score scene "${scene.id}" against.`);
     }
     const best = ranked[0];
-
     if (best.score < selectionThreshold) {
       warnings.push({
         sceneId: scene.id,

@@ -13,7 +13,6 @@ const PUBLIC_SFX_DIR = path.join(__dirname, "../../public");
  */
 export async function listSfxFiles(cfg) {
   const sfxDir = path.resolve(cfg.sfxDir);
-  console.log("sfxdir", sfxDir);
   let entries;
   try {
     entries = await readdir(sfxDir, { withFileTypes: true });
