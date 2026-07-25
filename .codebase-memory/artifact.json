@@ -1,11 +1,11 @@
 {
     "schema_version": 2,
-    "commit": "f5812e5e427ebcf6453a108830710e390dd8d64f",
-    "indexed_at": "2026-07-25T19:07:41Z",
+    "commit": "bc8cf2bd469671109d5787d2b022ee3b0a71b0fa",
+    "indexed_at": "2026-07-25T19:53:59Z",
     "project": "home-tablewares-random-randomized-storyboard",
-    "nodes": 599,
-    "edges": 817,
+    "nodes": 535,
+    "edges": 772,
     "original_size": 2949120,
-    "compressed_size": 413258,
+    "compressed_size": 404745,
     "compression_level": 3
 }

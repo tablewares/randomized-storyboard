@@ -1,0 +1,73 @@
+{
+  "id": "storyboard-styles-demo",
+  "seed": "style-demo-7",
+  "fps": 30,
+  "voice": { "provider": "kyutai", "voiceId": "george" },
+  "music": { "path": "music.mp3", "volume": 0.18 },
+  "sfxDir": "./public/sfx",
+  "globalStyle": {
+    "palette": {
+      "background": "#0a0f0d",
+      "foreground": "#f0fff4",
+      "accent": "#22d3ee"
+    },
+    "font": { "heading": "Georgia, serif", "body": "Inter, sans-serif", "scale": 1.05 },
+    "spacing": { "scale": 1 },
+    "radius": 20
+  },
+  "scenes": [
+    {
+      "id": "scene-1-global",
+      "voiceover": "Here are three lessons the pros never tell you.",
+      "templateId": "lists/basic",
+      "keywords": ["top", "ranking", "tips"],
+      "content": {
+        "title": "3 Untold Lessons",
+        "description": "Habits the best designers quietly share.",
+        "items": ["Speed is a feature", "Consistency beats intensity", "Details compound trust"]
+      },
+      "styleOverrides": {
+        "palette": { "accent": "#22d3ee" }
+      }
+    },
+    {
+      "id": "scene-2-override",
+      "voiceover": "Step two: keep one bold accent for the hero moment.",
+      "templateId": "lists/basic",
+      "keywords": ["steps", "highlight"],
+      "content": {
+        "title": "Step Two",
+        "items": ["Pick one bold accent", "Use it only once per scene"]
+      },
+      "styleOverrides": {
+        "palette": {
+          "background": "#1a0b1f",
+          "foreground": "#ffe4f5",
+          "accent": "#ff3d92"
+        },
+        "font": { "heading": "Inter, sans-serif", "scale": 1.25 },
+        "spacing": { "scale": 1.15 },
+        "radius": 32
+      }
+    },
+    {
+      "id": "scene-3-quote",
+      "voiceover": "As Dieter Rams put it: good design is as little design as possible.",
+      "templateId": "quote/pull-quote",
+      "keywords": ["quote", "design", "inspiration"],
+      "content": {
+        "quote": "Good design is as little design as possible.",
+        "source": "Dieter Rams",
+        "caption": "Ten principles for good design"
+      },
+      "styleOverrides": {
+        "palette": {
+          "background": "#fdf6e3",
+          "foreground": "#1f2933",
+          "accent": "#b45309"
+        },
+        "font": { "heading": "Georgia, serif", "scale": 1.1 }
+      }
+    }
+  ]
+}
