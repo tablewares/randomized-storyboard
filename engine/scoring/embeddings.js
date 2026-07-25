@@ -79,9 +79,12 @@ export async function keywordSimilarity(sceneKeywords, templateKeywords, embedde
 
   // Average best-match cosine similarity: for each scene keyword, take its
   // best similarity against any template keyword, then average.
-  const sceneVecs = await Promise.all(sceneKeywords.map((k) => embedder.embed(k)));
-  const templateVecs = await Promise.all(templateKeywords.map((k) => embedder.embed(k)));
+  // Calls embed() N + M times
+  // Optimized: Makes only 2 batch calls
+  const sceneVecs = await embedder.embed(sceneKeywords);
+  const templateVecs = await embedder.embed(templateKeywords);  
   let total = 0;
+
   for (const sv of sceneVecs) {
     let best = 0;
     for (const tv of templateVecs) best = Math.max(best, cosineSimilarity(sv, tv));
