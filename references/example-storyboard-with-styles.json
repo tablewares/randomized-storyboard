@@ -1,0 +1,56 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "outputPath": "output/styled-video.mp4",
+  "theme": "cinematic",
+  "styleOverridesFile": "style-overrides.example.json",
+  "voiceConfig": {
+    "workDir": ".",
+    "voiceId": "george",
+    "speed": 1,
+    "alignment": {
+      "model": "small",
+      "language": "en",
+      "device": "cpu",
+      "computeType": "int8"
+    }
+  },
+  "voiceoverSegments": [
+    {
+      "id": "intro-scene",
+      "type": "title-card",
+      "text": "The Future of AI",
+      "styleOverrides": {
+        "colors": {
+          "background": "#0A0A0A",
+          "text": "#F5F0E8",
+          "accent": "#D4A574"
+        }
+      }
+    },
+    {
+      "id": "s1",
+      "type": "quote",
+      "text": "The best way to predict the future is to invent it.",
+      "styleOverrides": {
+        "fontFamily": "'Cinzel', serif",
+        "fontSize": "48px"
+      }
+    },
+    {
+      "id": "s2",
+      "type": "stat-highlight",
+      "text": "AI investment reached $150B in 2024",
+      "subtitle": "Up 40% from previous year"
+    },
+    {
+      "id": "s3",
+      "type": "image-panel",
+      "text": "Neural networks transforming industries",
+      "media": {
+        "image": "https://example.com/ai-image.jpg"
+      }
+    }
+  ]
+}

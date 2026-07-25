@@ -1,0 +1,49 @@
+{
+  "global": {
+    "colors": {
+      "background": "#0D0D0D",
+      "text": "#F0F0F0",
+      "accent": "#00D4AA"
+    },
+    "fonts": {
+      "primary": "'Space Grotesk', 'Inter', sans-serif",
+      "display": "'Space Grotesk', 'Inter', sans-serif"
+    },
+    "fontSizes": {
+      "base": "18px",
+      "xl": "28px",
+      "2xl": "36px"
+    }
+  },
+  "byTemplate": {
+    "quote": {
+      "colors": {
+        "background": "#000000",
+        "text": "#FFFFFF",
+        "accent": "#FFD700"
+      },
+      "styleVariants": [{ "name": "cinematic-quote", "fontWeight": 300, "letterSpacing": "0.02em" }]
+    },
+    "image-panel": {
+      "boundingBoxes": {
+        "image": { "x": 40, "y": 100, "w": 1000, "h": 1200 },
+        "text": { "x": 80, "y": 1350, "w": 920, "h": 400 }
+      }
+    }
+  },
+  "bySceneIndex": {
+    "0": {
+      "colors": {
+        "background": "#1A0033",
+        "accent": "#FF00FF"
+      }
+    }
+  },
+  "bySceneId": {
+    "intro-scene": {
+      "boundingBoxes": {
+        "text": { "x": 100, "y": 300, "w": 880, "h": 200 }
+      }
+    }
+  }
+}
