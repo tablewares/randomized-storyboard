@@ -172,7 +172,7 @@ older tree. The **current** working tree on `main` (as of 2025-07-25) drives
 timing through `main.js` → `orchestrator.js` → `engine/pipeline1/`:
 
 - `engine/pipeline1/voiceover.js` — **`synthesizeAndAlign(segments, options)` is the single entry point**, returns `{ audioPath, sceneTimings[] }` where each timing is `{sceneId, startSec, endSec, start, end}`.
-- `engine/pipeline1/whisperAlign.mjs` — `alignStoryboardToTranscript` returns per-scene `{start, end}` (first/last matched word timestamps). Older flat-numeric-array callers can read `.end`.
+- `engine/pipeline1/whisperAlign.mjs` — `alignStoryboardToTranscript` returns per-scene `{start, end}` (first/last matched word timestamps). Older flat-numeric-array callers can read `.end`. As of the timing-difference-accumulation change, accepts optional `wordsPerSecond`/`speed` to anchor each scene's whisper boundary against a WPM estimate and accumulate the per-scene drift (`whisperEnd − estEnd`) as a corrective offset applied to all subsequent scenes' boundaries — opt-in, defaults to no-op (raw monotonic whisper boundaries). Other knobs: `maxPerSceneDriftSec` (clamp on per-scene delta; default 0.5), `minSceneDurationSec` (matches voiceover.js Path 2 floor; default 0.5), `sceneEndBufferSec` (per-scene end pad; default 0), `accumulationPadPerSceneSec` (bias the WPM estimate long; default 0). Without `wordsPerSecond`, the function is byte-identical to the pre-accumulation implementation.
 - `engine/pipeline1/kyutai_tts.js` — `synthesizeVoice` POSTs to `localhost:8000/tts`; `getAudioDurationSec` shells out to `ffprobe`.
 - `engine/pipeline1/index.js` — `runPipeline1()` calls `synthesizeAndAlign` then scoring.
 

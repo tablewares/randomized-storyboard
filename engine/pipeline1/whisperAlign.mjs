@@ -189,12 +189,75 @@ function alignTokenSequences(aTokens, bTokens) {
  * non-overlapping boundaries and clamps the last scene's end to the real
  * audio duration so trailing TTS audio is never cut short.
  *
+ * ## Timing-difference accumulation
+ *
+ * A single whisper boundary per scene is a *local* measurement — it tells
+ * you where this scene's last word ended, but says nothing about whether
+ * the TTS engine paced scene 1 longer or shorter than the WPM model
+ * predicted, which would systematically shift every later scene's measured
+ * `start`/`end` even though the engine trusts them blindly downstream. If
+ * scene 1's real TTS ran 120ms longer than the WPM estimate predicted,
+ * scene 2's whisper `start` is +120ms vs. where the WPM model would have
+ * placed it, scene 3 is +120ms (or +240ms if scene 2 also ran long), etc.
+ * After ~20 scenes the cumulative drift can be a full second, and a
+ * "recovered" boundary that ignore this is really just the WPM estimate
+ * with noise on top — not the anchored measurement the caller thinks it
+ * is.
+ *
+ * To account for that accumulation, this function optionally anchors each
+ * scene's whispered boundary against a WPM estimate (`wordsPerSecond`/
+ * `speed`) and accumulates the per-scene difference (whisperEnd − estEnd)
+ * into a running `accumulatedDrift`. Each emitted scene's `{start,end}`
+ * is then offset by the *prior* accumulated drift — i.e. by the drift
+ * contributed by every scene *before* this one — so the returned
+ * boundary is shifted to where the scene actually sits on the revealed
+ * TTS timeline rather than where the WPM model naively predicted it.
+ *
+ * Per-scene drift delta is clamped to ±`maxPerSceneDriftSec` (default
+ * 0.5s) before being added to the accumulator, so one wildly misaligned
+ * scene (whisper misheard a word and stretched its `end` to 3s) cannot
+ * permanently offset every subsequent boundary. This is the same
+ * "build cumulative headroom so later scenes lag the real audio rather
+ * than running ahead of it" motivation as `ACCUMULATION_PAD_PER_SCENE_SEC`
+ * in voiceover.js, but applied here *inside* alignment so the boundary
+ * returned to the caller already carries the corrective offset, rather
+ * than the caller having to bolt it on after the fact.
+ *
+ * The accumulation path is opt-in: without `wordsPerSecond` it is a pure
+ * no-op and the function behaves exactly as before (raw monotonic whisper
+ * boundaries). All options default to neutral so existing callers see no
+ * behavioral change unless they pass the new knobs.
+ *
  * Backward-compat: the previous return shape was a flat numeric array of
  * end-times. Call sites that only need end times can read `.end` from each
  * element. The single in-repo consumer (voiceover.js) has been updated in
  * the same change.
+ *
+ * @param {string[]} sceneVoiceoverTexts
+ * @param {{word:string, start:number, end:number}[]} transcriptWords
+ * @param {Object} [opts]
+ * @param {(info:{matchRatio:number, matchedCount:number, totalTokens:number}) => void} [opts.onLowConfidence]
+ * @param {number} [opts.wordsPerSecond] - enable drift accumulation; WPM/60
+ * @param {number} [opts.speed=1] - speech rate multiplier for the WPM anchor
+ * @param {number} [opts.minSceneDurationSec=0.5] - per-scene WPM floor (matches voiceover.js Path 2)
+ * @param {number} [opts.sceneEndBufferSec=0] - per-scene end pad (see voiceover.js SCENE_END_BUFFER_SEC). 0 disables.
+ * @param {number} [opts.maxPerSceneDriftSec=0.5] - clamp on the delta added to accumulatedDrift per scene
+ * @param {number} [opts.accumulationPadPerSceneSec=0] - bias each estimated duration long (see voiceover.js ACCUMULATION_PAD_PER_SCENE_SEC). 0 disables.
+ * @returns {{start:number|null, end:number|null}[]}
  */
-export function alignStoryboardToTranscript(sceneVoiceoverTexts, transcriptWords, { onLowConfidence } = {}) {
+export function alignStoryboardToTranscript(
+  sceneVoiceoverTexts,
+  transcriptWords,
+  {
+    onLowConfidence,
+    wordsPerSecond,
+    speed = 1,
+    minSceneDurationSec = 0.5,
+    sceneEndBufferSec = 0,
+    maxPerSceneDriftSec = 0.5,
+    accumulationPadPerSceneSec = 0,
+  } = {}
+) {
   const sceneTokenCounts = sceneVoiceoverTexts.map((t) => tokenize(t).length);
   const storyboardTokens = sceneVoiceoverTexts.flatMap((t) => tokenize(t)).map(normalizeToken);
   const transcriptTokens = transcriptWords.map((w) => normalizeToken(w.word));
@@ -233,18 +296,31 @@ export function alignStoryboardToTranscript(sceneVoiceoverTexts, transcriptWords
     return null;
   };
 
+  // --- Drift accumulator -------------------------------------------------
+  // accumulatedDrift: sum of per-scene (whisperEnd − estEnd) deltas seen so
+  // far, each clamped to ±maxPerSceneDriftSec. Offset applied to scene i is
+  // the drift contributed by scenes [0, i-1] — i.e. scene i is shifted by
+  // the historical drift, not by its own measurement (a scene cannot correct
+  // itself; only later scenes see its contribution).
+  const useAccumulation = typeof wordsPerSecond === "number" && wordsPerSecond > 0 && speed > 0;
+  let accumulatedDrift = 0;
+
   const sceneBoundaries = [];
   let cursor = 0;
   let lastEnd = 0;
-  for (const count of sceneTokenCounts) {
+  for (let sceneIdx = 0; sceneIdx < sceneTokenCounts.length; sceneIdx += 1) {
+    const count = sceneTokenCounts[sceneIdx];
+
     if (count === 0) {
       // Text-less scene: no spoken anchor. Keep nulls so the caller's
       // contract is explicit (caller clamps to previous end / audio
       // duration), rather than smuggling a 0 in here that may not be a
-      // meaningful timestamp.
+      // meaningful timestamp. Also no drift contribution (no measured
+      // boundary to compare against).
       sceneBoundaries.push({ start: null, end: null });
       continue;
     }
+
     const firstTokenIdx = cursor;
     const lastTokenIdx = cursor + count - 1;
 
@@ -253,6 +329,16 @@ export function alignStoryboardToTranscript(sceneVoiceoverTexts, transcriptWords
     if (startTime === null) startTime = lastEnd;
     if (endTime === null) endTime = lastEnd;
 
+    // The corrective offset applied to *this* scene is the drift
+    // accumulated by every scene *before* it. We snapshot it before
+    // factoring in this scene's own (whisperEnd − estEnd) below.
+    const driftOffset = useAccumulation ? accumulatedDrift : 0;
+    if (useAccumulation) {
+      if (startTime !== null) startTime += driftOffset;
+      if (endTime !== null) endTime += driftOffset;
+      if (sceneEndBufferSec > 0) endTime += sceneEndBufferSec;
+    }
+
     // Monotonic, non-overlapping, non-negative-duration guarantees on the
     // single contiguous audio track:
     //   1. start cannot come before the previous scene's end (scenes can't
@@ -260,6 +346,48 @@ export function alignStoryboardToTranscript(sceneVoiceoverTexts, transcriptWords
     //   2. end cannot come before start (no zero/negative-duration scenes).
     startTime = Math.max(startTime, lastEnd);
     endTime = Math.max(endTime, lastEnd, startTime);
+
+    // Update the drift accumulator using this scene's *own* measured whisper
+    // end (pre-offset — we want the raw comparison against the WPM model's
+    // prediction for this scene in isolation) minus the WPM estimate of this
+    // scene's duration. The estimate follows the same formula as voiceover.js
+    // Path 2 (wordCount / (WPS * speed), min `minSceneDurationSec`) plus the
+    // accumulation pad, so the comparison is apples-to-apples with the caller's
+    // own fallback estimate. Clamping per-scene delta to ±maxPerSceneDriftSec
+    // keeps one outlier scene from permanently shifting the entire tail.
+    if (useAccumulation) {
+      const rawEnd = resolveEndTime(lastTokenIdx);
+      if (rawEnd !== null) {
+        const estDuration =
+          Math.max(count / (wordsPerSecond * speed), minSceneDurationSec) + accumulationPadPerSceneSec;
+        const prevRawEnd = (() => {
+          // The raw end of the previous scene in the un-offset timeline —
+          // i.e. where the WPM model would have placed the previous scene's
+          // end. Computed by walking the (count, [rawEnd]) pairs the same
+          // way the loop does, but skipping offset application. This is O(n)
+          // total across the whole call (each previous scene is looked up
+          // once via resolveEndTime below, cached implicitly by the linear
+          // scan order), not O(n^2): we only re-resolve the immediately
+          // previous scene's rawEnd, which we already paid for last iteration.
+          if (sceneIdx === 0) return 0;
+          // First-token index of the previous non-empty scene.
+          let prevIdx = sceneIdx - 1;
+          let prevFirstToken = firstTokenIdx - sceneTokenCounts[sceneIdx - 1];
+          while (prevIdx >= 0 && sceneTokenCounts[prevIdx] === 0) {
+            prevIdx -= 1;
+            prevFirstToken -= sceneTokenCounts[prevIdx] || 0;
+          }
+          if (prevIdx < 0) return 0;
+          const prevLastToken = prevFirstToken + sceneTokenCounts[prevIdx] - 1;
+          const prevRaw = resolveEndTime(prevLastToken);
+          return prevRaw === null ? 0 : prevRaw;
+        })();
+        const estEnd = prevRawEnd + estDuration;
+        const perSceneDrift = rawEnd - estEnd;
+        const clampedDelta = Math.max(-maxPerSceneDriftSec, Math.min(maxPerSceneDriftSec, perSceneDrift));
+        accumulatedDrift += clampedDelta;
+      }
+    }
 
     sceneBoundaries.push({ start: startTime, end: endTime });
     lastEnd = endTime;

@@ -1,0 +1,193 @@
+{
+  "id": "storyboard-long-focus",
+  "seed": "focus-8-scene-11",
+  "fps": 30,
+  "voice": {
+    "provider": "kyutai",
+    "voiceId": "george"
+  },
+  "globalStyle": {
+    "palette": {
+      "background": "#0b0f14",
+      "foreground": "#eef2f7",
+      "accent": "#7c5cff"
+    },
+    "font": {
+      "heading": "Inter, sans-serif",
+      "body": "Inter, sans-serif",
+      "scale": 1.04
+    },
+    "spacing": {
+      "scale": 1
+    },
+    "radius": 22
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "voiceover": "You're not lazy. You're just running the wrong operating system.",
+      "templateId": "lists/basic",
+      "keywords": [
+        "hook",
+        "myth",
+        "focus"
+      ],
+      "content": {
+        "title": "Focus Is An Operating System",
+        "description": "Not a personality trait you're missing.",
+        "items": [
+          "Attention is trainable",
+          "Context is cheaper than willpower",
+          "Workflow beats grit"
+        ]
+      }
+    },
+    {
+      "id": "principle-1",
+      "voiceover": "Step one: clear the work surface before you start cooking.",
+      "templateId": "lists/basic",
+      "keywords": [
+        "steps",
+        "clear",
+        "focus"
+      ],
+      "content": {
+        "title": "One: Clear The Surface",
+        "description": "Decision residue kills deep work",
+        "items": [
+          "Close every tab you're not writing into",
+          "One window. One doc. One task.",
+          "Phone face-down out of frame"
+        ]
+      }
+    },
+    {
+      "id": "quote-cal",
+      "voiceover": "Cal Newport said, clarity about what matters is the foundation of deep work.",
+      "templateId": "quote/pull-quote",
+      "keywords": [
+        "quote",
+        "deep",
+        "work"
+      ],
+      "content": {
+        "quote": "Clarity about what matters provides clarity about what does not.",
+        "source": "Cal Newport",
+        "caption": "From Deep Work"
+      }
+    },
+    {
+      "id": "principle-2",
+      "voiceover": "Step two: shrink the time slot. Parkinson's law is doing you a favor.",
+      "templateId": "lists/basic",
+      "keywords": [
+        "steps",
+        "time",
+        "parkinsons"
+      ],
+      "styleOverrides": {
+        "palette": {
+          "accent": "#ff8a4b"
+        }
+      },
+      "content": {
+        "title": "Two: Shrink The Slot",
+        "description": "Work expands to fill the time you give it.",
+        "items": [
+          "Two-hour windows become four-hour excuses",
+          "Set a shorter timer than feels safe",
+          "Stop mid-sentence when it rings"
+        ]
+      }
+    },
+    {
+      "id": "principle-3",
+      "voiceover": "Step three: anchor on one verb, not a pile of nouns.",
+      "templateId": "lists/basic",
+      "keywords": [
+        "steps",
+        "verb",
+        "anchor"
+      ],
+      "content": {
+        "title": "Three: One Verb, Not Many Nouns",
+        "description": "Tasks are verbs. Pins on a board are nouns.",
+        "items": [
+          "Write. Not 'writing stuff'.",
+          "Code. Not 'project work'.",
+          "Ship. Not 'wrap up soon'."
+        ]
+      }
+    },
+    {
+      "id": "quote-naval",
+      "voiceover": "Naval Ravikant put it bluntly: desire is a contract to be unhappy.",
+      "templateId": "quote/pull-quote",
+      "keywords": [
+        "quote",
+        "desire",
+        "naval"
+      ],
+      "styleOverrides": {
+        "palette": {
+          "background": "#1a1224",
+          "foreground": "#f5ecff",
+          "accent": "#f0b7ff"
+        },
+        "font": {
+          "heading": "Georgia, serif",
+          "scale": 1.08
+        }
+      },
+      "content": {
+        "quote": "Desire is a contract you make with yourself to be unhappy until you get what you want.",
+        "source": "Naval Ravikant",
+        "caption": "On the cost of wanting"
+      }
+    },
+    {
+      "id": "principle-4",
+      "voiceover": "Step four: log the distraction, don't fight it. Capture it and keep going.",
+      "templateId": "lists/basic",
+      "keywords": [
+        "steps",
+        "capture",
+        "distraction"
+      ],
+      "content": {
+        "title": "Four: Capture, Don't Resist",
+        "description": "Writing it down frees the loop your brain is running.",
+        "items": [
+          "Pen and paper to the left of the keyboard",
+          "One line per itch, no elaboration",
+          "Revisit the list after the timer rings"
+        ]
+      }
+    },
+    {
+      "id": "close",
+      "voiceover": "Four moves, one system. Run it tomorrow before you decide you're broken.",
+      "templateId": "lists/basic",
+      "keywords": [
+        "closing",
+        "recap",
+        "system"
+      ],
+      "styleOverrides": {
+        "palette": {
+          "accent": "#7c5cff"
+        }
+      },
+      "content": {
+        "title": "Run It Tomorrow",
+        "description": "Skills are not traits. They're reps.",
+        "items": [
+          "Clear the surface",
+          "Shrink the slot",
+          "Anchor one verb",
+          "Capture, don't resist"
+        ]
+      }
+    }
+  ]
+}
