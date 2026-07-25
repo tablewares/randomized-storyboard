@@ -1,7 +1,7 @@
 {
   "outputDir": "./dist/output",
   "templatesRoot": "./templates",
-  "selectionThreshold": 0.75,
+  "selectionThreshold": 0.1,
   "skipRender": false,
   "scoringWeights": {
     "semanticMatch": 0.5,
@@ -17,8 +17,8 @@
   },
   "cfg": {
     "render": true,
-    "sfxDir": "./assets/sfx",
-    "music": "music.mp4"
+    "sfxDir": "./public/sfx",
+    "music": "music.mp3"
   }
 
 }
