@@ -23,7 +23,9 @@ async function main() {
     skipRender: config.skipRender,
     scoringWeights: config.scoringWeights,
     storyboard: storyboard,
-    embedder: embedder
+    embedder: embedder,
+    voicecfg: config.voicecfg,
+    cfg: config.cfg
   };
 
   console.log("Starting Storyboard Engine...");

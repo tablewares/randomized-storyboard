@@ -33,9 +33,9 @@
         "text": "Here are the top three things you need to know.",
         "sceneId": "scene-1",
         "startSec": 0,
-        "endSec": 4,
+        "endSec": 2.28,
         "start": 0,
-        "end": 4
+        "end": 2.28
       },
       "contentWarnings": []
     },
@@ -69,10 +69,10 @@
         "id": "scene-2",
         "text": "Number one: always ship on time.",
         "sceneId": "scene-2",
-        "startSec": 4,
-        "endSec": 6.4,
-        "start": 4,
-        "end": 6.4
+        "startSec": 2.28,
+        "endSec": 5.02,
+        "start": 2.28,
+        "end": 5.02
       },
       "contentWarnings": []
     }

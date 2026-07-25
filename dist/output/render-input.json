@@ -1,8 +1,20 @@
 {
   "fps": 30,
-  "totalDurationSec": 6.4,
-  "audioPath": null,
-  "sfx": [],
+  "totalDurationSec": 5.02,
+  "audioPath": "C:\\Users\\froze\\Downloads\\storyboard-engine-jsx\\combined_voice.mp3",
+  "music": "./assets/music/music.mp4",
+  "sfx": [
+    {
+      "sceneId": "scene-1",
+      "atSec": 2.28,
+      "sfxPath": "C:\\Users\\froze\\Downloads\\storyboard-engine-jsx\\assets\\sfx\\oxidvideos-transition-sfx-whoosh-sound-effect-407576.mp3"
+    },
+    {
+      "sceneId": "scene-2",
+      "atSec": 5.02,
+      "sfxPath": "C:\\Users\\froze\\Downloads\\storyboard-engine-jsx\\assets\\sfx\\oxidvideos-transition-sfx-whoosh-sound-effect-407576.mp3"
+    }
+  ],
   "scenes": [
     {
       "sceneId": "scene-1",
@@ -37,9 +49,9 @@
         "text": "Here are the top three things you need to know.",
         "sceneId": "scene-1",
         "startSec": 0,
-        "endSec": 4,
+        "endSec": 2.28,
         "start": 0,
-        "end": 4
+        "end": 2.28
       },
       "contentWarnings": []
     },
@@ -73,10 +85,10 @@
         "id": "scene-2",
         "text": "Number one: always ship on time.",
         "sceneId": "scene-2",
-        "startSec": 4,
-        "endSec": 6.4,
-        "start": 4,
-        "end": 6.4
+        "startSec": 2.28,
+        "endSec": 5.02,
+        "start": 2.28,
+        "end": 5.02
       },
       "contentWarnings": []
     }

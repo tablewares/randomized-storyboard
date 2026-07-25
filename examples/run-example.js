@@ -41,7 +41,9 @@ const storyboard = {
     },
   ],
 };
-
+const cfg = {
+  render: true
+};
 
 async function main() {
   const templatesRoot = path.resolve("templates");
@@ -59,7 +61,7 @@ async function main() {
   }
 
   const pipeline2 = runPipeline2(storyboard, pipeline1, { templateRegistry: registry });
-  const { renderInput } = await preparePipeline3(storyboard, pipeline1, pipeline2);
+  const { renderInput } = await preparePipeline3(storyboard, pipeline1, pipeline2, cfg);
 
   console.log(JSON.stringify({ pipeline1, pipeline2, renderInput }, null, 2));
 }

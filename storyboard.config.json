@@ -7,5 +7,18 @@
     "semanticMatch": 0.5,
     "pacingMatch": 0.3,
     "styleMatch": 0.2
+  },
+  "voicecfg": {
+    "workDir": "." ,
+    "voice": "george", 
+    "alignment": {}, 
+    "speed": 1,
+    "WORDS_PER_SECOND": 2.5 
+  },
+  "cfg": {
+    "render": true,
+    "sfxDir": "./assets/sfx",
+    "music": "./assets/music/music.mp4"
   }
+
 }

@@ -39,6 +39,7 @@ export async function runStoryboardEngine(opts) {
     scoringWeights: opts.scoringWeights,
     embedder: opts.embedder,
     selectionThreshold: opts.selectionThreshold,
+    voicecfg: opts.voicecfg
   });
   await writeFile(path.join(opts.outputDir, "pipeline1-output.json"), JSON.stringify(pipeline1, null, 2));
   if (pipeline1.warnings.length > 0) {
@@ -53,16 +54,17 @@ export async function runStoryboardEngine(opts) {
   await writeFile(path.join(opts.outputDir, "pipeline2-output.json"), JSON.stringify(pipeline2, null, 2));
 
   // ---- Pipeline 3: assemble render input, then render with Remotion -----
-  const { renderInput } = await preparePipeline3(opts.storyboard, pipeline1, pipeline2);
+  const { renderInput } = await preparePipeline3(opts.storyboard, pipeline1, pipeline2, opts.cfg);
   await writeFile(path.join(opts.outputDir, "render-input.json"), JSON.stringify(renderInput, null, 2));
-  
+
   let videoPath;
+    console.log("renderinput", renderInput)
+
   if (!opts.skipRender) {
     videoPath = await renderStoryboardVideo(renderInput, {
       outputPath: path.join(opts.outputDir, `${opts.storyboard.id}.mp4`),
     });
   }
-
   return {
     templateFamilies: families,
     pipeline1,

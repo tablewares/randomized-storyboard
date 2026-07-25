@@ -6,67 +6,73 @@
 // the audio track for the whole video (no per-scene splitting/re-synthesis).
 //
 // To recover per-scene durations from that single file, we transcribe it
-// with WhisperX and align the storyboard's own voiceover text against the
-// transcript of what was *actually spoken* — not against a second,
+// with faster-whisper and align the storyboard's own voiceover text against
+// the transcript of what was *actually spoken* — not against a second,
 // separately-synthesized copy of the text (comparing synthesis-to-synthesis
 // tells you nothing about what the TTS engine actually produced; comparing
 // storyboard-text-to-transcript does).
 //
 // Requires:
-//   - `whisperx` on PATH (pip install whisperx)
+//   - `faster-whisper` in the target venv (pip install faster-whisper)
+//
+// Previously this shelled out to WhisperX. faster-whisper (CTranslate2)
+// gives the same kind of word-level timestamps WhisperX's forced-alignment
+// pass does, but without needing WhisperX's much heavier PyTorch/pyannote
+// dependency stack — smaller install, faster cold start, lower memory per
+// job. See fasterWhisperTranscribe.py, the helper script this now shells
+// out to instead of `python -m whisperx`.
+//
+// NOTE: this changes the *engine* producing the timestamps, not just how
+// it's called. The shape returned by alignAudioWords() below — and
+// everything downstream in alignStoryboardToTranscript() — is unchanged,
+// but exact word boundaries will differ slightly from what WhisperX
+// produced, since it's a different model runtime with its own decoding.
 
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const execFileAsync = promisify(execFile);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const TRANSCRIBE_SCRIPT = path.join(__dirname, "fasterWhisperTranscribe.py");
 
 /**
- * Runs WhisperX on an audio file and returns a flat, time-ordered list of
- * word-level timestamps: [{ word, start, end }, ...]
+ * Runs faster-whisper on an audio file and returns a flat, time-ordered
+ * list of word-level timestamps: [{ word, start, end }, ...]
  */
 export async function alignAudioWords(
   audioPath,
   { workDir, model = "small", language = "en", device = "cpu", computeType } = {}
 ) {
-  const outDir = workDir || path.dirname(audioPath);
+  const isWindows = process.platform === "win32";
 
-const isWindows = process.platform === 'win32';
+  // Dynamically construct the path to the python executable
+  const pythonPath = isWindows
+    ? path.join(workDir, ".venv", "Scripts", "python.exe")
+    : path.join(workDir, ".venv", "bin", "python");
 
-// Dynamically construct the path to the python executable
-const pythonPath = isWindows
-  ? path.join('.venv', 'Scripts', 'python.exe')
-  : path.join('.venv', 'bin', 'python');
+  // The helper script prints the word list as JSON on stdout, so unlike
+  // the old WhisperX call there's no output directory/file to manage.
+  const { stdout } = await execFileAsync(
+    pythonPath,
+    [
+      TRANSCRIBE_SCRIPT,
+      audioPath,
+      "--model", model,
+      "--language", language,
+      "--device", device,
+      "--compute_type", computeType || (device === "cpu" ? "int8" : "float16"),
+    ],
+    { maxBuffer: 1024 * 1024 * 64 }
+  );
 
-// Run your execution
-await execFileAsync(
-  pythonPath,
-  [
-    "-m",
-    "whisperx",
-    audioPath,
-    "--model", model,
-    "--language", language,
-    "--device", device,
-    "--output_format", "json",
-    "--output_dir", outDir,
-    "--compute_type", computeType || (device === "cpu" ? "int8" : "float16"),
-  ],
-  { maxBuffer: 1024 * 1024 * 64 }
-);
-
-  const base = path.basename(audioPath).replace(/\.[^/.]+$/, "");
-  const jsonPath = path.join(outDir, `${base}.json`);
-  const raw = await readFile(jsonPath, "utf8");
-  const parsed = JSON.parse(raw);
+  const parsed = JSON.parse(stdout);
 
   const words = [];
-  for (const segment of parsed.segments || []) {
-    for (const w of segment.words || []) {
-      if (typeof w.start === "number" && typeof w.end === "number" && w.word) {
-        words.push({ word: w.word.trim(), start: w.start, end: w.end });
-      }
+  for (const w of parsed.words || []) {
+    if (typeof w.start === "number" && typeof w.end === "number" && w.word) {
+      words.push({ word: w.word.trim(), start: w.start, end: w.end });
     }
   }
   return words;
@@ -84,35 +90,64 @@ function tokenize(text) {
  * Aligns two normalized token sequences via longest-common-subsequence
  * dynamic programming and returns the matched index pairs, in order.
  *
- * O(n*m) time/space — fine for narration-length scripts (hundreds to a few
- * thousand words). For very long scripts this would want to move to a
- * banded/Hirschberg-style alignment instead.
+ * O(n*m) time, but only O(m) + O(n*m) *bytes* of space rather than the
+ * (n+1)*(m+1) table of 32-bit counts a naive implementation needs: the
+ * forward pass only ever looks at the current and previous row of lengths,
+ * so those are kept in two reused Uint32Arrays, while the only thing kept
+ * per-cell for the traceback is a 1-byte direction code (diag/up/left) in a
+ * flat Uint8Array. That's a ~4x memory cut vs. storing full 32-bit lengths
+ * everywhere, with far better cache locality, and it produces byte-identical
+ * results to the original full-table version (same recurrence, same
+ * dp[i-1][j] >= dp[i][j-1] tie-break, just computed and stored differently).
+ *
+ * For scripts long enough that O(n*m) bytes is still too much, a
+ * banded/Hirschberg-style alignment would be the next step, but that
+ * changes which of several equally-optimal alignments gets picked when
+ * there are ties (e.g. repeated words), so it isn't a safe drop-in here.
  */
 function alignTokenSequences(aTokens, bTokens) {
   const n = aTokens.length;
   const m = bTokens.length;
-  const dp = new Array(n + 1);
-  for (let i = 0; i <= n; i += 1) dp[i] = new Uint32Array(m + 1);
+
+  const DIAG = 0;
+  const UP = 1;
+  const LEFT = 2;
+  const dir = new Uint8Array(n * m);
+
+  let prev = new Uint32Array(m + 1);
+  let curr = new Uint32Array(m + 1);
 
   for (let i = 1; i <= n; i += 1) {
+    const rowBase = (i - 1) * m;
+    const a = aTokens[i - 1];
     for (let j = 1; j <= m; j += 1) {
-      if (aTokens[i - 1] === bTokens[j - 1]) {
-        dp[i][j] = dp[i - 1][j - 1] + 1;
+      if (a === bTokens[j - 1]) {
+        curr[j] = prev[j - 1] + 1;
+        dir[rowBase + (j - 1)] = DIAG;
+      } else if (prev[j] >= curr[j - 1]) {
+        curr[j] = prev[j];
+        dir[rowBase + (j - 1)] = UP;
       } else {
-        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+        curr[j] = curr[j - 1];
+        dir[rowBase + (j - 1)] = LEFT;
       }
     }
+    const tmp = prev;
+    prev = curr;
+    curr = tmp;
+    curr.fill(0);
   }
 
   const matches = [];
   let i = n;
   let j = m;
   while (i > 0 && j > 0) {
-    if (aTokens[i - 1] === bTokens[j - 1]) {
+    const d = dir[(i - 1) * m + (j - 1)];
+    if (d === DIAG) {
       matches.push({ aIndex: i - 1, bIndex: j - 1 });
       i -= 1;
       j -= 1;
-    } else if (dp[i - 1][j] >= dp[i][j - 1]) {
+    } else if (d === UP) {
       i -= 1;
     } else {
       j -= 1;

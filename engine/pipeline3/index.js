@@ -17,13 +17,13 @@ import { listSfxFiles, selectSfxForScenes } from "./sfxSelection.js";
  * @param {import("../../types.js").Pipeline2Output} pipeline2
  * @returns {Promise<Pipeline3PrepResult>}
  */
-export async function preparePipeline3(storyboard, pipeline1, pipeline2) {
+export async function preparePipeline3(storyboard, pipeline1, pipeline2, cfg) {
   const fps = storyboard.fps ?? 30;
   const scenes = pipeline2.hydratedScenes;
 
   const totalDurationSec = Math.max(...pipeline1.sceneTimings.map((t) => t.endSec));
 
-  const sfxFiles = storyboard.sfxDir ? await listSfxFiles(storyboard.sfxDir) : [];
+  const sfxFiles = cfg.sfxDir ? await listSfxFiles(cfg) : [];
   const sfx = selectSfxForScenes(storyboard.seed, scenes, sfxFiles);
 
   const transitions = pipeline1.templateSelections.slice(1).map((sel, i) => ({
@@ -36,7 +36,7 @@ export async function preparePipeline3(storyboard, pipeline1, pipeline2) {
     fps,
     totalDurationSec,
     audioPath: pipeline1.audioPath,
-    music: storyboard.music,
+    music: cfg.music,
     sfx,
     scenes,
     transitions,

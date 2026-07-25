@@ -8,7 +8,9 @@ const AUDIO_EXT = new Set([".mp3", ".wav", ".ogg", ".m4a"]);
  * @param {string} sfxDir
  * @returns {Promise<string[]>}
  */
-export async function listSfxFiles(sfxDir) {
+export async function listSfxFiles(cfg) {
+  const sfxDir = path.resolve(cfg.sfxDir);
+  console.log("sfxdir", sfxDir)
   let entries;
   try {
     entries = await readdir(sfxDir, { withFileTypes: true });

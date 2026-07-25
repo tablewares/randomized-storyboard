@@ -42,7 +42,7 @@ export async function synthesizeAndAlign(segments = [], options = {}) {
   // --- PATH 1: Dynamic Synthesis + WhisperX Alignment ---
   if (workDir) {
     const resolvedWorkDir = path.resolve(workDir);
-    const pythonpath = path.join(resolvedWorkDir, "src", "existing");
+    const pythonpath = path.join(resolvedWorkDir, "engine", "pipeline1");
 
     // Extract raw text strings for full text synthesis and storyboard alignment
     const sceneTexts = segments.map((segment) => segment.text || "");
