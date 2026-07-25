@@ -5,7 +5,18 @@ import { fade } from "@remotion/transitions/fade";
 import { slide } from "@remotion/transitions/slide";
 import { wipe } from "@remotion/transitions/wipe";
 
+// Statically import all structure components - Remotion can bundle these at build time
+import ListBasicDefault from "./structure1.jsx";
+import ListBasicBoldNumbered from "./structure2.jsx";
+
 const TRANSITION_DURATION_FRAMES = 15;
+
+// Map structure filenames to their components
+// This allows dynamic selection at render time while keeping static imports for bundling
+const STRUCTURE_COMPONENTS = {
+  "structure1.jsx": ListBasicDefault,
+  "structure2.jsx": ListBasicBoldNumbered,
+};
 
 function presentationForTransition(type) {
   switch (type) {
@@ -18,32 +29,11 @@ function presentationForTransition(type) {
     case "wipe":
       return wipe();
     case "zoom-blend":
-      // No dedicated zoom preset shipped by @remotion/transitions at time of
-      // writing; fall back to a fade which still reads as a soft blend.
       return fade();
     case "cut":
     default:
-      return null; // hard cut: render as a plain Sequence, no TransitionSeries entry
+      return null;
   }
-}
-
-/**
- * Dynamically loads a template's structure file (a React component) by
- * absolute path. Structure files are plain default-export React components
- * that accept `{ content, style, animation }` props - see
- * templates/lists/basic/structure1.jsx for the reference shape.
- */
-function loadStructureComponent(structurePath) {
-  return React.lazy(() => import(/* webpackIgnore: false */ structurePath));
-}
-
-function SceneContent({ scene }) {
-  const Structure = loadStructureComponent(scene.structurePath);
-  return (
-    <Suspense fallback={<AbsoluteFill style={{ background: scene.style.palette?.background ?? "#000" }} />}>
-      <Structure content={scene.content} style={scene.style} animation={scene.animation} />
-    </Suspense>
-  );
 }
 
 /**
@@ -62,16 +52,20 @@ export const StoryboardVideo = ({ input }) => {
 
   return (
     <AbsoluteFill>
-      {/* ---- Visual scenes, stitched with per-pair transitions ---- */}
       <TransitionSeries>
         {sceneFrames.map(({ scene, durationInFrames }, i) => {
           const prev = sceneFrames[i - 1]?.scene;
           const transitionType = prev ? transitionByPair.get(`${prev.sceneId}->${scene.sceneId}`) ?? "cut" : "cut";
           const presentation = presentationForTransition(transitionType);
 
+          // Look up the structure component by filename
+          const StructureComponent = STRUCTURE_COMPONENTS[scene.structurePath] ?? ListBasicDefault;
+
           const elements = [
             <TransitionSeries.Sequence key={`scene-${scene.sceneId}`} durationInFrames={durationInFrames}>
-              <SceneContent scene={scene} />
+              <Suspense fallback={<AbsoluteFill style={{ background: scene.style.palette?.background ?? "#000" }} />}>
+                <StructureComponent content={scene.content} style={scene.style} animation={scene.animation} />
+              </Suspense>
             </TransitionSeries.Sequence>,
           ];
 
@@ -88,25 +82,15 @@ export const StoryboardVideo = ({ input }) => {
         })}
       </TransitionSeries>
 
-      {/* ---- Continuous voiceover, one long file spanning the whole video ---- */}
-      <Audio src={audioPath} />
+      <Audio src={staticFile(audioPath)} />
 
-      {/* ---- Background music ---- */}
-      {music && <Audio src={resolveAudioSrc(music.path)} volume={music.volume ?? 0.25} loop />}
+      {music && <Audio src={staticFile(music.path)} volume={music.volume ?? 0.25} loop />}
 
-      {/* ---- SFX at each scene's end timestamp ---- */}
       {sfx.map((s) => (
         <Sequence key={`sfx-${s.sceneId}`} from={Math.round(s.atSec * fps)}>
-          <Audio src={resolveAudioSrc(s.sfxPath)} />
+          <Audio src={staticFile(s.sfxPath)} />
         </Sequence>
       ))}
     </AbsoluteFill>
   );
 };
-
-function resolveAudioSrc(p) {
-  // Absolute/remote paths are used as-is; bare filenames are resolved via
-  // Remotion's public/staticFile convention.
-  if (p.startsWith("http") || p.startsWith("/")) return p;
-  return staticFile(p);
-}

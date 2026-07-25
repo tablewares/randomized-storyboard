@@ -1,8 +1,9 @@
-import { readdir } from "node:fs/promises";
+import { readdir, copyFile } from "node:fs/promises";
 import path from "node:path";
 import { deriveRng, pick } from "../random/seededRandom.js";
 
 const AUDIO_EXT = new Set([".mp3", ".wav", ".ogg", ".m4a"]);
+const PUBLIC_SFX_DIR = path.resolve("public");
 
 /**
  * @param {string} sfxDir
@@ -10,7 +11,7 @@ const AUDIO_EXT = new Set([".mp3", ".wav", ".ogg", ".m4a"]);
  */
 export async function listSfxFiles(cfg) {
   const sfxDir = path.resolve(cfg.sfxDir);
-  console.log("sfxdir", sfxDir)
+  console.log("sfxdir", sfxDir);
   let entries;
   try {
     entries = await readdir(sfxDir, { withFileTypes: true });
@@ -19,7 +20,12 @@ export async function listSfxFiles(cfg) {
   }
   return entries
     .filter((e) => e.isFile() && AUDIO_EXT.has(path.extname(e.name).toLowerCase()))
-    .map((e) => path.join(sfxDir, e.name));
+    .map((e) => {
+      const src = path.join(sfxDir, e.name);
+      const dest = path.join(PUBLIC_SFX_DIR, e.name);
+      copyFile(src, dest).catch(() => {});
+      return e.name;
+    });
 }
 
 /**

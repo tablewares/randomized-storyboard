@@ -1,4 +1,6 @@
-{"scenes": [
+{
+  "id": "storyboard-1",
+  "scenes": [
     {
       "id": "scene-1",
       "voiceover": "Here are the top three things you need to know.",
@@ -18,6 +20,6 @@
         "title": "Step One",
         "items": ["Always ship on time", "Communicate blockers early"]
       }
-}
-]
+    }
+  ]
 }

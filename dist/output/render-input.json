@@ -1,18 +1,21 @@
 {
   "fps": 30,
-  "totalDurationSec": 5.02,
-  "audioPath": "C:\\Users\\froze\\Downloads\\storyboard-engine-jsx\\combined_voice.mp3",
-  "music": "./assets/music/music.mp4",
+  "totalDurationSec": 4.8,
+  "audioPath": "combined_voice.mp3",
+  "music": {
+    "path": "music.mp4",
+    "volume": 0.25
+  },
   "sfx": [
     {
       "sceneId": "scene-1",
-      "atSec": 2.28,
-      "sfxPath": "C:\\Users\\froze\\Downloads\\storyboard-engine-jsx\\assets\\sfx\\oxidvideos-transition-sfx-whoosh-sound-effect-407576.mp3"
+      "atSec": 2.3,
+      "sfxPath": "oxidvideos-transition-sfx-whoosh-sound-effect-407576.mp3"
     },
     {
       "sceneId": "scene-2",
-      "atSec": 5.02,
-      "sfxPath": "C:\\Users\\froze\\Downloads\\storyboard-engine-jsx\\assets\\sfx\\oxidvideos-transition-sfx-whoosh-sound-effect-407576.mp3"
+      "atSec": 4.8,
+      "sfxPath": "oxidvideos-transition-sfx-whoosh-sound-effect-407576.mp3"
     }
   ],
   "scenes": [
@@ -21,7 +24,7 @@
       "family": "lists",
       "templateId": "lists/basic",
       "variationId": "default",
-      "structurePath": "C:\\Users\\froze\\Downloads\\storyboard-engine-jsx\\templates\\lists\\basic\\structure1.jsx",
+      "structurePath": "structure1.jsx",
       "animation": "stagger-fade-in",
       "content": {
         "title": "Top 3 Things To Know",
@@ -49,9 +52,9 @@
         "text": "Here are the top three things you need to know.",
         "sceneId": "scene-1",
         "startSec": 0,
-        "endSec": 2.28,
+        "endSec": 2.3,
         "start": 0,
-        "end": 2.28
+        "end": 2.3
       },
       "contentWarnings": []
     },
@@ -60,7 +63,7 @@
       "family": "lists",
       "templateId": "lists/basic",
       "variationId": "bold-numbered",
-      "structurePath": "C:\\Users\\froze\\Downloads\\storyboard-engine-jsx\\templates\\lists\\basic\\structure2.jsx",
+      "structurePath": "structure2.jsx",
       "animation": "pop-in",
       "content": {
         "title": "Step One",
@@ -85,10 +88,10 @@
         "id": "scene-2",
         "text": "Number one: always ship on time.",
         "sceneId": "scene-2",
-        "startSec": 2.28,
-        "endSec": 5.02,
-        "start": 2.28,
-        "end": 5.02
+        "startSec": 2.3,
+        "endSec": 4.8,
+        "start": 2.3,
+        "end": 4.8
       },
       "contentWarnings": []
     }
