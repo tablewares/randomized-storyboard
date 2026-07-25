@@ -44,7 +44,7 @@ export async function preparePipeline3(storyboard, pipeline1, pipeline2, cfg) {
   await mkdir(publicDir, { recursive: true });
   
   let audioPath = pipeline1.audioPath;
-  if (audioPath.startsWith("/home/") || audioPath.startsWith("/mnt/") || audioPath.startsWith("/Users/") || audioPath.startsWith("/root/")) {
+  if (path.isAbsolute(audioPath)) {
     const audioFilename = path.basename(audioPath);
     const destPath = path.join(publicDir, audioFilename);
     await copyFile(audioPath, destPath);
@@ -53,7 +53,7 @@ export async function preparePipeline3(storyboard, pipeline1, pipeline2, cfg) {
 
   // Copy music file to public folder if it exists
   let musicPath = cfg.music;
-  if (musicPath && (musicPath.startsWith("/home/") || musicPath.startsWith("/mnt/") || musicPath.startsWith("/Users/") || musicPath.startsWith("/root/"))) {
+  if (musicPath && path.isAbsolute(musicPath)) {
     const musicFilename = path.basename(musicPath);
     const destPath = path.join(publicDir, musicFilename);
     await copyFile(musicPath, destPath);
@@ -63,7 +63,7 @@ export async function preparePipeline3(storyboard, pipeline1, pipeline2, cfg) {
   // Copy SFX files to public folder
   const sfxWithPaths = sfx.map((s) => {
     let sfxPath = s.sfxPath;
-    if (sfxPath.startsWith("/home/") || sfxPath.startsWith("/mnt/") || sfxPath.startsWith("/Users/") || sfxPath.startsWith("/root/")) {
+    if (path.isAbsolute(sfxPath)) {
       const sfxFilename = path.basename(sfxPath);
       const destPath = path.join(publicDir, sfxFilename);
       copyFile(sfxPath, destPath).catch(() => {}); // Best effort, don't fail if missing

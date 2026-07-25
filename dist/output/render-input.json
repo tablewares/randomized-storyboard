@@ -1,6 +1,6 @@
 {
   "fps": 30,
-  "totalDurationSec": 8.96,
+  "totalDurationSec": 8.78,
   "audioPath": "combined_voice.mp3",
   "music": {
     "path": "music.mp4",
@@ -9,17 +9,17 @@
   "sfx": [
     {
       "sceneId": "scene-1",
-      "atSec": 2.14,
+      "atSec": 2.28,
       "sfxPath": "oxidvideos-transition-sfx-whoosh-sound-effect-407576.mp3"
     },
     {
       "sceneId": "scene-2",
-      "atSec": 4.82,
+      "atSec": 4.9,
       "sfxPath": "oxidvideos-transition-sfx-whoosh-sound-effect-407576.mp3"
     },
     {
       "sceneId": "scene-3",
-      "atSec": 8.96,
+      "atSec": 8.78,
       "sfxPath": "matthewvakaliuk73627-mouse-click-290204.mp3"
     }
   ],
@@ -57,9 +57,9 @@
         "text": "Here are the top three things you need to know.",
         "sceneId": "scene-1",
         "startSec": 0,
-        "endSec": 2.14,
+        "endSec": 2.28,
         "start": 0,
-        "end": 2.14
+        "end": 2.28
       },
       "contentWarnings": []
     },
@@ -93,10 +93,10 @@
         "id": "scene-2",
         "text": "Number one: always ship on time.",
         "sceneId": "scene-2",
-        "startSec": 2.14,
-        "endSec": 4.82,
-        "start": 2.14,
-        "end": 4.82
+        "startSec": 2.28,
+        "endSec": 4.9,
+        "start": 2.28,
+        "end": 4.9
       },
       "contentWarnings": []
     },
@@ -128,10 +128,10 @@
         "id": "scene-3",
         "text": "As Steve Jobs once said, design is not just what it looks like.",
         "sceneId": "scene-3",
-        "startSec": 4.82,
-        "endSec": 8.96,
-        "start": 4.82,
-        "end": 8.96
+        "startSec": 4.9,
+        "endSec": 8.78,
+        "start": 4.9,
+        "end": 8.78
       },
       "contentWarnings": []
     }

@@ -1,9 +1,11 @@
 import { readdir, copyFile } from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { deriveRng, pick } from "../random/seededRandom.js";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const AUDIO_EXT = new Set([".mp3", ".wav", ".ogg", ".m4a"]);
-const PUBLIC_SFX_DIR = path.resolve("public");
+const PUBLIC_SFX_DIR = path.join(__dirname, "../../public");
 
 /**
  * @param {string} sfxDir
