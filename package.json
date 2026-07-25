@@ -1,0 +1,19 @@
+{
+  "name": "storyboard-engine",
+  "version": "1.0.0",
+  "description": "Three-pipeline storyboard-to-video engine: voiceover timing, weighted template selection, seeded hydration, Remotion render. Plain JS/JSX, no build step.",
+  "type": "module",
+  "scripts": {
+    "example": "node examples/run-example.js"
+  },
+  "dependencies": {
+    "@remotion/bundler": "^4.0.0",
+    "@remotion/cli": "^4.0.0",
+    "@remotion/renderer": "^4.0.0",
+    "@remotion/transitions": "^4.0.499",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.0",
+    "seedrandom": "^3.0.5"
+  }
+}

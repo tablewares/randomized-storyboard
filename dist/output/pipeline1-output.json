@@ -1,0 +1,54 @@
+{
+  "audioPath": null,
+  "sceneTimings": [
+    {
+      "id": "scene-1",
+      "text": "Here are the top three things you need to know.",
+      "sceneId": "scene-1",
+      "startSec": 0,
+      "endSec": 4,
+      "start": 0,
+      "end": 4
+    },
+    {
+      "id": "scene-2",
+      "text": "Number one: always ship on time.",
+      "sceneId": "scene-2",
+      "startSec": 4,
+      "endSec": 6.4,
+      "start": 4,
+      "end": 6.4
+    }
+  ],
+  "templateSelections": [
+    {
+      "sceneId": "scene-1",
+      "templateId": "lists/basic",
+      "family": "lists",
+      "score": null,
+      "scoreBreakdown": {
+        "keyCoverage": 1,
+        "charFit": 1,
+        "keyword": 0,
+        "familyHint": 1
+      },
+      "transitionIn": "cut",
+      "transitionOut": "slide-up"
+    },
+    {
+      "sceneId": "scene-2",
+      "templateId": "lists/basic",
+      "family": "lists",
+      "score": null,
+      "scoreBreakdown": {
+        "keyCoverage": 1,
+        "charFit": 1,
+        "keyword": 0,
+        "familyHint": 0.5
+      },
+      "transitionIn": "slide-up",
+      "transitionOut": "cut"
+    }
+  ],
+  "warnings": []
+}

@@ -1,0 +1,23 @@
+{"scenes": [
+    {
+      "id": "scene-1",
+      "voiceover": "Here are the top three things you need to know.",
+      "family": "lists",
+      "keywords": ["top", "ranking"],
+      "content": {
+        "title": "Top 3 Things To Know",
+        "description": "A quick rundown before we dive in.",
+        "items": ["Speed matters", "Consistency wins", "Details compound"]
+      }
+    },
+    {
+      "id": "scene-2",
+      "voiceover": "Number one: always ship on time.",
+      "keywords": ["list", "steps"],
+      "content": {
+        "title": "Step One",
+        "items": ["Always ship on time", "Communicate blockers early"]
+      }
+}
+]
+}

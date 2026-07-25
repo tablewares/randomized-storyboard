@@ -1,0 +1,33 @@
+{
+  "id": "basic",
+  "family": "lists",
+  "description": "A titled, numbered list of short items. Good for rankings, tips, and step lists.",
+  "keywords": ["list", "ranking", "top", "steps", "tips", "countdown"],
+  "supportedContentKeys": {
+    "title": { "required": true, "maxChars": 50 },
+    "description": { "maxChars": 160 },
+    "items": { "required": true, "maxItems": 6 },
+    "number": {}
+  },
+  "variations": [
+    {
+      "id": "default",
+      "structure": "structure1.jsx",
+      "animation": "stagger-fade-in",
+      "style": {
+        "palette": { "background": "#0b0b10", "foreground": "#f5f5f7", "accent": "#7c5cff" },
+        "font": { "heading": "Inter", "body": "Inter", "scale": 1 }
+      }
+    },
+    {
+      "id": "bold-numbered",
+      "structure": "structure2.jsx",
+      "animation": "pop-in",
+      "weight": 0.75,
+      "style": {
+        "palette": { "background": "#111417", "foreground": "#ffffff", "accent": "#ffcc00" },
+        "font": { "heading": "Inter", "body": "Inter", "scale": 1.1 }
+      }
+    }
+  ]
+}

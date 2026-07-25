@@ -1,0 +1,11 @@
+{
+  "outputDir": "./dist/output",
+  "templatesRoot": "./templates",
+  "selectionThreshold": 0.75,
+  "skipRender": false,
+  "scoringWeights": {
+    "semanticMatch": 0.5,
+    "pacingMatch": 0.3,
+    "styleMatch": 0.2
+  }
+}
