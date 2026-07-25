@@ -2,12 +2,14 @@ import { listSfxFiles, selectSfxForScenes } from "./sfxSelection.js";
 import { copyFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { copyStructureFiles, generateStructuresModule } from "./copyStructures.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * @typedef {Object} Pipeline3PrepResult
  * @property {import("../../types.js").RenderInput} renderInput
+ * @property {Map<string, string>} structureMap - structureKey -> unique public path
  */
 
 /**
@@ -70,12 +72,35 @@ export async function preparePipeline3(storyboard, pipeline1, pipeline2, cfg) {
     return { ...s, sfxPath };
   });
 
-  // No longer need to copy structure files to public - they are now statically imported in StoryboardVideo.jsx
-  // Just use the filename for the lookup map in StoryboardVideo.jsx
-  const scenesWithStructureFilenames = scenes.map((scene) => ({
-    ...scene,
-    structurePath: path.basename(scene.structurePath),
-  }));
+  // Copy structure files from template registry to public/structures with unique names
+  // and generate the STRUCTURE_COMPONENTS module for static import
+  // Use templateRegistry from pipeline1 (which has the full registry)
+  const structureMap = await copyStructureFiles(pipeline1.templateRegistry, publicDir);
+  const structuresModulePath = path.join(__dirname, "Structures.jsx");
+  await generateStructuresModule(structureMap, structuresModulePath);
+
+  // Use composite key (family-templateId-structureFilename) for lookup in STRUCTURE_COMPONENTS
+  // This avoids collisions when multiple templates use the same structure filename
+  const scenesWithStructureKeys = scenes.map((scene) => {
+    // Find the template to get family and templateId
+    const template = pipeline1.templateRegistry.get(scene.templateId);
+    if (!template) {
+      console.warn(`Template ${scene.templateId} not found in registry, using fallback key`);
+      return {
+        ...scene,
+        structurePath: path.basename(scene.structurePath),
+      };
+    }
+    const safeFamily = template.family.replace(/\//g, "-");
+    const safeTemplateId = template.id.replace(/\//g, "-");
+    const structureFilename = path.basename(scene.structurePath);
+    const structureKey = `${safeFamily}-${safeTemplateId}-${structureFilename}`;
+    
+    return {
+      ...scene,
+      structurePath: structureKey,
+    };
+  });
 
   const renderInput = {
     fps,
@@ -83,9 +108,9 @@ export async function preparePipeline3(storyboard, pipeline1, pipeline2, cfg) {
     audioPath,
     music: cfg.music ? { path: musicPath, volume: 0.25 } : null,
     sfx: sfxWithPaths,
-    scenes: scenesWithStructureFilenames,
+    scenes: scenesWithStructureKeys,
     transitions,
   };
 
-  return { renderInput };
+  return { renderInput, structureMap };
 }

@@ -1,0 +1,22 @@
+{
+  "id": "pull-quote",
+  "family": "quote",
+  "description": "A single large quote with attribution. Good for testimonials, highlights, and memorable lines.",
+  "keywords": ["quote", "testimonial", "highlight", "saying", "citation"],
+  "supportedContentKeys": {
+    "quote": { "required": true, "maxChars": 300 },
+    "source": { "required": false, "maxChars": 100 },
+    "caption": { "maxChars": 160 }
+  },
+  "variations": [
+    {
+      "id": "default",
+      "structure": "structure1.jsx",
+      "animation": "fade-in",
+      "style": {
+        "palette": { "background": "#0f0f12", "foreground": "#f5f5f7", "accent": "#ff6b6b" },
+        "font": { "heading": "Georgia, serif", "body": "Inter", "scale": 1.2 }
+      }
+    }
+  ]
+}

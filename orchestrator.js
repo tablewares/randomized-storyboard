@@ -65,8 +65,11 @@ export async function runStoryboardEngine(opts) {
       outputPath: path.join(opts.outputDir, `${opts.storyboard.id}.mp4`),
     });
   }
+  // Convert families Map to array for logging
+  const familyList = Array.from(families.keys());
+  console.log(`Discovered Template Families: ${familyList.join(", ")} (${familyList.length} families)`);
   return {
-    templateFamilies: families,
+    templateFamilies: familyList,
     pipeline1,
     pipeline2,
     renderInput,

@@ -80,7 +80,7 @@ export async function runPipeline1(storyboard, config) {
     templateSelections[i - 1].transitionOut = chosen; // symmetric: the cut between A and B is one transition
   }
 
-  return { audioPath, sceneTimings, templateSelections, warnings };
+  return { audioPath, sceneTimings, templateSelections, warnings, templateRegistry };
 }
 
 function buildLowScoreReason(best) {

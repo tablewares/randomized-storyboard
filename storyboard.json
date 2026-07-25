@@ -20,6 +20,17 @@
         "title": "Step One",
         "items": ["Always ship on time", "Communicate blockers early"]
       }
+    },
+    {
+      "id": "scene-3",
+      "voiceover": "As Steve Jobs once said, design is not just what it looks like.",
+      "family": "quote",
+      "keywords": ["quote", "design", "inspiration"],
+      "content": {
+        "quote": "Design is not just what it looks like and feels like. Design is how it works.",
+        "source": "Steve Jobs",
+        "caption": "On product design philosophy"
+      }
     }
   ]
 }

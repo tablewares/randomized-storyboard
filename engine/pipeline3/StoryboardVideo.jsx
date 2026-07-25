@@ -5,18 +5,10 @@ import { fade } from "@remotion/transitions/fade";
 import { slide } from "@remotion/transitions/slide";
 import { wipe } from "@remotion/transitions/wipe";
 
-// Statically import all structure components - Remotion can bundle these at build time
-import ListBasicDefault from "./structure1.jsx";
-import ListBasicBoldNumbered from "./structure2.jsx";
+// Import dynamically generated structure components registry
+import { STRUCTURE_COMPONENTS } from "./Structures.jsx";
 
 const TRANSITION_DURATION_FRAMES = 15;
-
-// Map structure filenames to their components
-// This allows dynamic selection at render time while keeping static imports for bundling
-const STRUCTURE_COMPONENTS = {
-  "structure1.jsx": ListBasicDefault,
-  "structure2.jsx": ListBasicBoldNumbered,
-};
 
 function presentationForTransition(type) {
   switch (type) {
@@ -58,13 +50,19 @@ export const StoryboardVideo = ({ input }) => {
           const transitionType = prev ? transitionByPair.get(`${prev.sceneId}->${scene.sceneId}`) ?? "cut" : "cut";
           const presentation = presentationForTransition(transitionType);
 
-          // Look up the structure component by filename
-          const StructureComponent = STRUCTURE_COMPONENTS[scene.structurePath] ?? ListBasicDefault;
+          // Look up the structure component by filename from the dynamic registry
+          const StructureComponent = STRUCTURE_COMPONENTS[scene.structurePath];
 
           const elements = [
             <TransitionSeries.Sequence key={`scene-${scene.sceneId}`} durationInFrames={durationInFrames}>
               <Suspense fallback={<AbsoluteFill style={{ background: scene.style.palette?.background ?? "#000" }} />}>
-                <StructureComponent content={scene.content} style={scene.style} animation={scene.animation} />
+                {StructureComponent ? (
+                  <StructureComponent content={scene.content} style={scene.style} animation={scene.animation} />
+                ) : (
+                  <AbsoluteFill style={{ background: scene.style.palette?.background ?? "#000", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <div style={{ color: "white", fontSize: 48 }}>Missing template: {scene.structurePath}</div>
+                  </AbsoluteFill>
+                )}
               </Suspense>
             </TransitionSeries.Sequence>,
           ];
