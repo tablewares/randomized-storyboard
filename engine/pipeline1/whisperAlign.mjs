@@ -159,13 +159,40 @@ function alignTokenSequences(aTokens, bTokens) {
 
 /**
  * Aligns the storyboard's own per-scene voiceover text against the WhisperX
- * transcript of the combined audio, and returns one cumulative end-time (in
- * seconds, into the combined audio) per scene — i.e. where each scene's
- * speech actually finishes, according to what was actually spoken.
+ * transcript of the combined audio, and returns one { start, end } pair (in
+ * seconds, into the combined audio) per scene — i.e. approximately where
+ * each scene's speech actually begins and ends, according to what was
+ * actually spoken.
+ *
+ * Returns an array in scene order. Each element is:
+ *   { start: number|null, end: number|null }
+ * null means "no anchor found":
+ *   - start: null because the scene has no spoken tokens (the caller should
+ *     collapse it to the previous scene's end), or because every token of
+ *     the scene failed to match and no neighbor matched either (caller
+ *     falls back to previous end).
+ *   - end:   null for the same reasons; caller should clamp it so the scene
+ *     doesn't collapse to zero.
  *
  * `transcriptWords` — WhisperX word list for the combined audio (see
  * alignAudioWords). `sceneVoiceoverTexts` — storyboard voiceover strings,
  * in scene order (same strings that were concatenated for synthesis).
+ *
+ * Why {start,end} and not just end times: the previous implementation only
+ * computed each scene's *end* (last matched word's `end`) and derived its
+ * start as the previous scene's end. That was an approximation — a scene
+ * whose first word actually starts 200ms after the previous scene's last
+ * word ended got an inflated duration and ate into padding. Recovering
+ * first/last matched word timestamps per scene directly is the most accurate
+ * anchor we can get from a single-pass transcription without running a
+ * second ASR pass. Downstream (voiceover.js) still guarantees monotonic,
+ * non-overlapping boundaries and clamps the last scene's end to the real
+ * audio duration so trailing TTS audio is never cut short.
+ *
+ * Backward-compat: the previous return shape was a flat numeric array of
+ * end-times. Call sites that only need end times can read `.end` from each
+ * element. The single in-repo consumer (voiceover.js) has been updated in
+ * the same change.
  */
 export function alignStoryboardToTranscript(sceneVoiceoverTexts, transcriptWords, { onLowConfidence } = {}) {
   const sceneTokenCounts = sceneVoiceoverTexts.map((t) => tokenize(t).length);
@@ -183,9 +210,20 @@ export function alignStoryboardToTranscript(sceneVoiceoverTexts, transcriptWords
 
   // For a storyboard token with no direct transcript match (TTS mispronounced
   // it, WhisperX misheard it, etc.), fall back to the nearest matched
-  // neighbor — preferring to look backward, since we want an "end of speech
-  // so far" boundary.
-  const resolveTime = (tokenIndex) => {
+  // neighbor. For START lookups we walk forward first (we want the first
+  // word that's actually spoken in this scene); for END lookups we walk
+  // backward first (we want the last word that's actually spoken).
+  const resolveStartTime = (tokenIndex) => {
+    for (let k = tokenIndex; k < matchMap.length; k += 1) {
+      if (matchMap[k] !== -1) return transcriptWords[matchMap[k]].start;
+    }
+    for (let k = tokenIndex - 1; k >= 0; k -= 1) {
+      if (matchMap[k] !== -1) return transcriptWords[matchMap[k]].end;
+    }
+    return null;
+  };
+
+  const resolveEndTime = (tokenIndex) => {
     for (let k = tokenIndex; k >= 0; k -= 1) {
       if (matchMap[k] !== -1) return transcriptWords[matchMap[k]].end;
     }
@@ -195,25 +233,38 @@ export function alignStoryboardToTranscript(sceneVoiceoverTexts, transcriptWords
     return null;
   };
 
-  const sceneEndTimes = [];
+  const sceneBoundaries = [];
   let cursor = 0;
   let lastEnd = 0;
   for (const count of sceneTokenCounts) {
-    let endTime;
     if (count === 0) {
-      endTime = lastEnd;
-    } else {
-      const lastTokenIdx = cursor + count - 1;
-      endTime = resolveTime(lastTokenIdx);
-      if (endTime === null) endTime = lastEnd;
+      // Text-less scene: no spoken anchor. Keep nulls so the caller's
+      // contract is explicit (caller clamps to previous end / audio
+      // duration), rather than smuggling a 0 in here that may not be a
+      // meaningful timestamp.
+      sceneBoundaries.push({ start: null, end: null });
+      continue;
     }
-    // Boundaries must be monotonically non-decreasing along the single
-    // audio track — guard against any local mis-ordering from the alignment.
-    endTime = Math.max(endTime, lastEnd);
-    sceneEndTimes.push(endTime);
+    const firstTokenIdx = cursor;
+    const lastTokenIdx = cursor + count - 1;
+
+    let startTime = resolveStartTime(firstTokenIdx);
+    let endTime = resolveEndTime(lastTokenIdx);
+    if (startTime === null) startTime = lastEnd;
+    if (endTime === null) endTime = lastEnd;
+
+    // Monotonic, non-overlapping, non-negative-duration guarantees on the
+    // single contiguous audio track:
+    //   1. start cannot come before the previous scene's end (scenes can't
+    //      overlap on one continuous audio track),
+    //   2. end cannot come before start (no zero/negative-duration scenes).
+    startTime = Math.max(startTime, lastEnd);
+    endTime = Math.max(endTime, lastEnd, startTime);
+
+    sceneBoundaries.push({ start: startTime, end: endTime });
     lastEnd = endTime;
     cursor += count;
   }
 
-  return sceneEndTimes;
+  return sceneBoundaries;
 }
