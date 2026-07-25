@@ -1,0 +1,32 @@
+{
+  "id": "anthropic-statement",
+  "family": "brand",
+  "description": "A minimal editorial statement card in Anthropic's warm cream/terracotta brand style — headline, subtitle, and body copy.",
+  "keywords": ["brand", "anthropic", "statement", "editorial", "minimal", "quote"],
+  "supportedContentKeys": {
+    "title":       { "required": true, "maxChars": 60 },
+    "subtitle":    { "maxChars": 80 },
+    "description": { "maxChars": 200 },
+    "source":      { "maxChars": 50 }
+  },
+  "variations": [
+    {
+      "id": "default",
+      "structure": "structure1.jsx",
+      "animation": "fade-up",
+      "style": {
+        "palette": { "background": "#F0EEE6", "foreground": "#1F1E1D", "accent": "#D97757", "muted": "#8A8677" },
+        "font":    { "heading": "Georgia, 'Iowan Old Style', serif", "body": "'Helvetica Neue', Arial, sans-serif", "scale": 1 }
+      }
+    },
+    {
+      "id": "stat",
+      "structure": "structure2.jsx",
+      "animation": "fade-up",
+      "style": {
+        "palette": { "background": "#D97757", "foreground": "#F0EEE6", "accent": "#F0EEE6", "muted": "#F3E3D3" },
+        "font":    { "heading": "Georgia, 'Iowan Old Style', serif", "body": "'Helvetica Neue', Arial, sans-serif", "scale": 1 }
+      }
+    }
+  ]
+}

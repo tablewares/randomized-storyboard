@@ -2,7 +2,7 @@
   "id": "storyboard-1",
   "scenes": [
     {
-      "id": "scene-1",
+      "id": "anthropic-statement",
       "voiceover": "Here are the top three things you need to know.",
       "family": "lists",
       "keywords": ["top", "ranking"],
