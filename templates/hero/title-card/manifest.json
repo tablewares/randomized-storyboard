@@ -1,0 +1,67 @@
+{
+  "id": "title-card",
+  "family": "hero",
+  "description": "Big title card for opening a video or a chapter. Headline + optional subtitle and caption.",
+  "keywords": [
+    "hero",
+    "title",
+    "intro",
+    "opener",
+    "chapter",
+    "headline",
+    "section",
+    "cover"
+  ],
+  "supportedContentKeys": {
+    "title": {
+      "required": true,
+      "maxChars": 80
+    },
+    "subtitle": {
+      "maxChars": 100
+    },
+    "caption": {
+      "maxChars": 140
+    },
+    "date": {
+      "maxChars": 30
+    }
+  },
+  "variations": [
+    {
+      "id": "default",
+      "structure": "structure1.jsx",
+      "animation": "fade-up",
+      "style": {
+        "palette": {
+          "background": "#0b0b12",
+          "foreground": "#f5f5f7",
+          "accent": "#7c5cff"
+        },
+        "font": {
+          "heading": "Inter",
+          "body": "Inter",
+          "scale": 1
+        }
+      }
+    },
+    {
+      "id": "pop",
+      "structure": "structure2.jsx",
+      "animation": "pop-in",
+      "weight": 0.85,
+      "style": {
+        "palette": {
+          "background": "#111417",
+          "foreground": "#ffffff",
+          "accent": "#ffcc00"
+        },
+        "font": {
+          "heading": "Inter",
+          "body": "Inter",
+          "scale": 1
+        }
+      }
+    }
+  ]
+}

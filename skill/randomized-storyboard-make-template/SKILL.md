@@ -133,15 +133,16 @@ export default function MyStructure({ content, style, animation }) {
 }
 ```
 
-**Reality check — the structures copied into Remotion at render time:**
-`engine/pipeline3/copyStructures.js` copies every `structure*.jsx` from every
-discovered template into `public/structures/<family>-<templateId>-<structurefile>`
-and regenerates `engine/pipeline3/Structures.jsx` with static ES-module imports
-of those copies. `StoryboardVideo.jsx` looks up structure components by the
-composite key `<family>-<id>-<structurefile>` (where `family` has `/` replaced by `-`).
-So **no manual registration step** — drop the files into `templates/<family>/<id>/`
-and discovery + copyStructures do the rest at the next render. The composite
-key is what pipeline3's render passes to the Bridge.
+**Reality check — how structures reach Remotion at render time:**
+`engine/pipeline3/copyStructures.js` regenerates `engine/pipeline3/Structures.jsx`
+with static ES-module imports that point **directly at the original template
+files** under `templates/<family>/<id>/<structure>.jsx` — nothing is copied into
+`public/`. `StoryboardVideo.jsx` looks up structure components by the composite
+key `<family>-<id>-<structurefile>` (where `family` has `/` replaced by `-`), the
+same key pipeline3 puts on each scene's `structurePath` (see
+`engine/pipeline3/index.js`). So **no manual registration step** — drop the files
+into `templates/<family>/<id>/` and discovery + `Structures.jsx` generation do the
+rest at the next render.
 
 **Required imports** (look at `templates/lists/basic/structure1.jsx` for the
 reference contract):

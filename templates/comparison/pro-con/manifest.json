@@ -1,0 +1,46 @@
+{
+  "id": "pro-con",
+  "family": "comparison",
+  "description": "Two-panel pros/cons. The first half of items route to Pros, the rest to Cons.",
+  "keywords": [
+    "compare",
+    "pros",
+    "cons",
+    "advantages",
+    "disadvantages",
+    "tradeoff",
+    "table"
+  ],
+  "supportedContentKeys": {
+    "title": {
+      "maxChars": 70
+    },
+    "items": {
+      "maxItems": 8
+    },
+    "caption": {
+      "maxChars": 140
+    }
+  },
+  "variations": [
+    {
+      "id": "default",
+      "structure": "structure1.jsx",
+      "animation": "stagger-fade-in",
+      "style": {
+        "palette": {
+          "background": "#0b0b12",
+          "foreground": "#f5f5f7",
+          "accent": "#34d399",
+          "primary": "#ff6b6b",
+          "muted": "#2a2a40"
+        },
+        "font": {
+          "heading": "Inter",
+          "body": "Inter",
+          "scale": 1
+        }
+      }
+    }
+  ]
+}

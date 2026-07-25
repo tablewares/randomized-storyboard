@@ -8,10 +8,10 @@
   },
   {
     "sceneId": "scene-2",
-    "bestTemplateId": "lists/basic",
+    "bestTemplateId": "comparison/before-after",
     "score": 0.7000000000000001,
     "threshold": 0.8,
-    "reason": "Best available template \"lists/basic\" only scored 0.70, below threshold. Weakest dimension: keyword (0.00). Consider authoring a new template (or a new variation) that better supports this scene's content keys/keywords/length, or adjust the scene's content to fit an existing template."
+    "reason": "Best available template \"comparison/before-after\" only scored 0.70, below threshold. Weakest dimension: keyword (0.00). Consider authoring a new template (or a new variation) that better supports this scene's content keys/keywords/length, or adjust the scene's content to fit an existing template."
   },
   {
     "sceneId": "scene-3",

@@ -1,0 +1,46 @@
+{
+  "id": "milestones",
+  "family": "timeline",
+  "description": "Row of milestone cards, each labelled with the scene's `number` (or an auto-counter).",
+  "keywords": [
+    "timeline",
+    "milestones",
+    "stages",
+    "checkpoints",
+    "phases",
+    "roadmap"
+  ],
+  "supportedContentKeys": {
+    "title": {
+      "maxChars": 70
+    },
+    "number": {},
+    "items": {
+      "required": true,
+      "maxItems": 5
+    },
+    "caption": {
+      "maxChars": 120
+    }
+  },
+  "variations": [
+    {
+      "id": "default",
+      "structure": "structure1.jsx",
+      "animation": "stagger-fade-in",
+      "style": {
+        "palette": {
+          "background": "#0b0b12",
+          "foreground": "#f5f5f7",
+          "accent": "#ffcc00",
+          "muted": "#2a2a40"
+        },
+        "font": {
+          "heading": "Inter",
+          "body": "Inter",
+          "scale": 1
+        }
+      }
+    }
+  ]
+}

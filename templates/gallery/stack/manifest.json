@@ -1,0 +1,44 @@
+{
+  "id": "stack",
+  "family": "gallery",
+  "description": "Stacked deck of images, each sliding in from the right with a slight rotation.",
+  "keywords": [
+    "gallery",
+    "stack",
+    "deck",
+    "images",
+    "photos",
+    "carousel",
+    "reveal"
+  ],
+  "supportedContentKeys": {
+    "title": {
+      "maxChars": 70
+    },
+    "images": {
+      "required": true,
+      "maxItems": 4
+    },
+    "caption": {
+      "maxChars": 120
+    }
+  },
+  "variations": [
+    {
+      "id": "default",
+      "structure": "structure1.jsx",
+      "animation": "stagger-fade-in",
+      "style": {
+        "palette": {
+          "background": "#0b0b12",
+          "foreground": "#f5f5f7"
+        },
+        "font": {
+          "heading": "Inter",
+          "body": "Inter",
+          "scale": 1
+        }
+      }
+    }
+  ]
+}

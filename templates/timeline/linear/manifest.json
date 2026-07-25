@@ -1,0 +1,47 @@
+{
+  "id": "linear",
+  "family": "timeline",
+  "description": "Horizontal linear timeline of steps with dots animating in sequence along an accent rail.",
+  "keywords": [
+    "timeline",
+    "sequence",
+    "steps",
+    "history",
+    "stages",
+    "process",
+    "path",
+    "chronological"
+  ],
+  "supportedContentKeys": {
+    "title": {
+      "maxChars": 70
+    },
+    "items": {
+      "required": true,
+      "maxItems": 6
+    },
+    "caption": {
+      "maxChars": 120
+    }
+  },
+  "variations": [
+    {
+      "id": "default",
+      "structure": "structure1.jsx",
+      "animation": "stagger-fade-in",
+      "style": {
+        "palette": {
+          "background": "#0b0b12",
+          "foreground": "#f5f5f7",
+          "accent": "#7c5cff",
+          "muted": "#2a2a40"
+        },
+        "font": {
+          "heading": "Inter",
+          "body": "Inter",
+          "scale": 1
+        }
+      }
+    }
+  ]
+}

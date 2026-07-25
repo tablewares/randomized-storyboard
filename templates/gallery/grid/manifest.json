@@ -1,0 +1,45 @@
+{
+  "id": "grid",
+  "family": "gallery",
+  "description": "Image gallery grid of up to 4 tiles animating in one by one.",
+  "keywords": [
+    "gallery",
+    "grid",
+    "images",
+    "photos",
+    "shots",
+    "tiles",
+    "preview"
+  ],
+  "supportedContentKeys": {
+    "title": {
+      "maxChars": 70
+    },
+    "images": {
+      "required": true,
+      "maxItems": 4
+    },
+    "caption": {
+      "maxChars": 120
+    }
+  },
+  "variations": [
+    {
+      "id": "default",
+      "structure": "structure1.jsx",
+      "animation": "stagger-fade-in",
+      "style": {
+        "palette": {
+          "background": "#0b0b12",
+          "foreground": "#f5f5f7",
+          "muted": "#222233"
+        },
+        "font": {
+          "heading": "Inter",
+          "body": "Inter",
+          "scale": 1
+        }
+      }
+    }
+  ]
+}

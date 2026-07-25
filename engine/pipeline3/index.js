@@ -2,14 +2,13 @@ import { listSfxFiles, selectSfxForScenes } from "./sfxSelection.js";
 import { copyFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { copyStructureFiles, generateStructuresModule } from "./copyStructures.js";
+import { generateStructuresModule } from "./copyStructures.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * @typedef {Object} Pipeline3PrepResult
  * @property {import("../../types.js").RenderInput} renderInput
- * @property {Map<string, string>} structureMap - structureKey -> unique public path
  */
 
 /**
@@ -72,12 +71,12 @@ export async function preparePipeline3(storyboard, pipeline1, pipeline2, cfg) {
     return { ...s, sfxPath };
   });
 
-  // Copy structure files from template registry to public/structures with unique names
-  // and generate the STRUCTURE_COMPONENTS module for static import
-  // Use templateRegistry from pipeline1 (which has the full registry)
-  const structureMap = await copyStructureFiles(pipeline1.templateRegistry, publicDir);
+  // Generate the STRUCTURE_COMPONENTS module for static import.
+  // Imports point directly at the original template files (no copies). The
+  // composite lookup key (family-templateId-structureFilename) is built both
+  // here (per scene) and in copyStructures.js (per import), so they line up.
   const structuresModulePath = path.join(__dirname, "Structures.jsx");
-  await generateStructuresModule(structureMap, structuresModulePath);
+  await generateStructuresModule(pipeline1.templateRegistry, structuresModulePath);
 
   // Use composite key (family-templateId-structureFilename) for lookup in STRUCTURE_COMPONENTS
   // This avoids collisions when multiple templates use the same structure filename
@@ -112,5 +111,5 @@ export async function preparePipeline3(storyboard, pipeline1, pipeline2, cfg) {
     transitions,
   };
 
-  return { renderInput, structureMap };
+  return { renderInput };
 }

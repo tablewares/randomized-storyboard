@@ -1,0 +1,48 @@
+{
+  "id": "tagline-overlay",
+  "family": "hero",
+  "description": "Hero with an accent uppercase tag above a big headline, on a soft radial-gradient backdrop. Good for branded opens.",
+  "keywords": [
+    "hero",
+    "tag",
+    "tagline",
+    "overlay",
+    "brand",
+    "opener",
+    "headline"
+  ],
+  "supportedContentKeys": {
+    "label": {
+      "maxChars": 24
+    },
+    "title": {
+      "required": true,
+      "maxChars": 90
+    },
+    "subtitle": {
+      "maxChars": 100
+    },
+    "caption": {
+      "maxChars": 120
+    }
+  },
+  "variations": [
+    {
+      "id": "default",
+      "structure": "structure1.jsx",
+      "animation": "stagger-fade-in",
+      "style": {
+        "palette": {
+          "background": "#0b0b16",
+          "foreground": "#f5f5f7",
+          "accent": "#7c5cff"
+        },
+        "font": {
+          "heading": "Inter",
+          "body": "Inter",
+          "scale": 1
+        }
+      }
+    }
+  ]
+}

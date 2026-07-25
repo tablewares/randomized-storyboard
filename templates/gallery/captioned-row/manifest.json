@@ -1,0 +1,44 @@
+{
+  "id": "captioned-row",
+  "family": "gallery",
+  "description": "Row of up to 3 images each with a caption underneath (uses image.alt). Good for short portfolios/snippets.",
+  "keywords": [
+    "gallery",
+    "row",
+    "captions",
+    "photos",
+    "triptych",
+    "thumbnails"
+  ],
+  "supportedContentKeys": {
+    "title": {
+      "maxChars": 70
+    },
+    "images": {
+      "required": true,
+      "maxItems": 3
+    },
+    "caption": {
+      "maxChars": 120
+    }
+  },
+  "variations": [
+    {
+      "id": "default",
+      "structure": "structure1.jsx",
+      "animation": "stagger-fade-in",
+      "style": {
+        "palette": {
+          "background": "#0b0b12",
+          "foreground": "#f5f5f7",
+          "muted": "#222233"
+        },
+        "font": {
+          "heading": "Inter",
+          "body": "Inter",
+          "scale": 1
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "journey",
+  "family": "timeline",
+  "description": "A scroll-like journey list where each step also gets a small propagating progress bar.",
+  "keywords": [
+    "timeline",
+    "journey",
+    "path",
+    "stages",
+    "steps",
+    "progress",
+    "roadmap"
+  ],
+  "supportedContentKeys": {
+    "title": {
+      "maxChars": 70
+    },
+    "items": {
+      "required": true,
+      "maxItems": 6
+    },
+    "caption": {
+      "maxChars": 120
+    }
+  },
+  "variations": [
+    {
+      "id": "default",
+      "structure": "structure1.jsx",
+      "animation": "stagger-fade-in",
+      "style": {
+        "palette": {
+          "background": "#0b0b12",
+          "foreground": "#f5f5f7",
+          "accent": "#38bdf8",
+          "muted": "#2a2a40"
+        },
+        "font": {
+          "heading": "Inter",
+          "body": "Inter",
+          "scale": 1
+        }
+      }
+    }
+  ]
+}

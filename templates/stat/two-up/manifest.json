@@ -1,0 +1,54 @@
+{
+  "id": "two-up",
+  "family": "stat",
+  "description": "Two stats side by side, divided by a subtle rule. Good for before/after comparisons or two KPIs.",
+  "keywords": [
+    "stat",
+    "metric",
+    "pair",
+    "compare",
+    "versus",
+    "kpi",
+    "two"
+  ],
+  "supportedContentKeys": {
+    "number": {
+      "required": true,
+      "maxChars": 20
+    },
+    "label": {
+      "maxChars": 60
+    },
+    "value": {
+      "required": true,
+      "maxChars": 20
+    },
+    "source": {
+      "maxChars": 60
+    },
+    "caption": {
+      "maxChars": 120
+    }
+  },
+  "variations": [
+    {
+      "id": "default",
+      "structure": "structure1.jsx",
+      "animation": "fade-in",
+      "style": {
+        "palette": {
+          "background": "#0b0b12",
+          "foreground": "#f5f5f7",
+          "accent": "#7c5cff",
+          "primary": "#f5f5f7",
+          "muted": "#2a2a36"
+        },
+        "font": {
+          "heading": "Inter",
+          "body": "Inter",
+          "scale": 1
+        }
+      }
+    }
+  ]
+}

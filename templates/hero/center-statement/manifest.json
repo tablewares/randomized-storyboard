@@ -1,0 +1,45 @@
+{
+  "id": "center-statement",
+  "family": "hero",
+  "description": "Centered, minimal single-statement hero. Calm, no overlay decorations. Good for thesis lines.",
+  "keywords": [
+    "hero",
+    "statement",
+    "thesis",
+    "centered",
+    "minimal",
+    "intro",
+    "headline"
+  ],
+  "supportedContentKeys": {
+    "title": {
+      "required": true,
+      "maxChars": 110
+    },
+    "subtitle": {
+      "maxChars": 120
+    },
+    "caption": {
+      "maxChars": 140
+    }
+  },
+  "variations": [
+    {
+      "id": "default",
+      "structure": "structure1.jsx",
+      "animation": "fade-in",
+      "style": {
+        "palette": {
+          "background": "#0b0b12",
+          "foreground": "#f5f5f7",
+          "accent": "#7c5cff"
+        },
+        "font": {
+          "heading": "Inter",
+          "body": "Inter",
+          "scale": 1
+        }
+      }
+    }
+  ]
+}

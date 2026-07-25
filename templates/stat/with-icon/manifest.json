@@ -1,0 +1,45 @@
+{
+  "id": "with-icon",
+  "family": "stat",
+  "description": "Big Number with an accent vertical bar serving as an icon stand-in. Good for emphasising one headline metric.",
+  "keywords": [
+    "stat",
+    "number",
+    "metric",
+    "icon",
+    "highlight",
+    "kpi",
+    "callout"
+  ],
+  "supportedContentKeys": {
+    "number": {
+      "required": true,
+      "maxChars": 16
+    },
+    "label": {
+      "maxChars": 60
+    },
+    "caption": {
+      "maxChars": 120
+    }
+  },
+  "variations": [
+    {
+      "id": "default",
+      "structure": "structure1.jsx",
+      "animation": "fade-in",
+      "style": {
+        "palette": {
+          "background": "#0b0b12",
+          "foreground": "#f5f5f7",
+          "accent": "#ff6b6b"
+        },
+        "font": {
+          "heading": "Inter",
+          "body": "Inter",
+          "scale": 1
+        }
+      }
+    }
+  ]
+}

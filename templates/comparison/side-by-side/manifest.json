@@ -1,0 +1,52 @@
+{
+  "id": "side-by-side",
+  "family": "comparison",
+  "description": "Two-column A vs B comparison. Pulls two pairs from items (head/body each), and renders optional images from images[0/1].",
+  "keywords": [
+    "compare",
+    "versus",
+    "vs",
+    "side-by-side",
+    "comparison",
+    "two-column",
+    "difference"
+  ],
+  "supportedContentKeys": {
+    "title": {
+      "maxChars": 70
+    },
+    "subtitle": {
+      "maxChars": 120
+    },
+    "items": {
+      "maxItems": 4
+    },
+    "images": {
+      "maxItems": 2
+    },
+    "caption": {
+      "maxChars": 140
+    }
+  },
+  "variations": [
+    {
+      "id": "default",
+      "structure": "structure1.jsx",
+      "animation": "stagger-fade-in",
+      "style": {
+        "palette": {
+          "background": "#0b0b12",
+          "foreground": "#f5f5f7",
+          "accent": "#ff6b6b",
+          "primary": "#38bdf8",
+          "muted": "#222233"
+        },
+        "font": {
+          "heading": "Inter",
+          "body": "Inter",
+          "scale": 1
+        }
+      }
+    }
+  ]
+}

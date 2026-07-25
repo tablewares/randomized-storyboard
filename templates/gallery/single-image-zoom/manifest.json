@@ -1,0 +1,43 @@
+{
+  "id": "single-image-zoom",
+  "family": "gallery",
+  "description": "Single hero image with a slow Ken Burns zoom-in and a title/caption overlay at the bottom.",
+  "keywords": [
+    "gallery",
+    "image",
+    "hero",
+    "ken-burns",
+    "zoom",
+    "feature",
+    "photo"
+  ],
+  "supportedContentKeys": {
+    "image": {
+      "required": true
+    },
+    "title": {
+      "maxChars": 80
+    },
+    "caption": {
+      "maxChars": 140
+    }
+  },
+  "variations": [
+    {
+      "id": "default",
+      "structure": "structure1.jsx",
+      "animation": "ken-burns",
+      "style": {
+        "palette": {
+          "background": "#0b0b12",
+          "foreground": "#ffffff"
+        },
+        "font": {
+          "heading": "Inter",
+          "body": "Inter",
+          "scale": 1
+        }
+      }
+    }
+  ]
+}
