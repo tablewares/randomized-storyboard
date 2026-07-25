@@ -1,7 +1,7 @@
 {
   "outputDir": "./dist/output",
   "templatesRoot": "./templates",
-  "selectionThreshold": 0.8,
+  "selectionThreshold": 0.75,
   "skipRender": false,
   "scoringWeights": {
     "keyCoverage": 0.4,

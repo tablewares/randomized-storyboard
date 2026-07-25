@@ -3,7 +3,7 @@ import { copyFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { generateStructuresModule } from "./copyStructures.js";
-
+import fs from "fs"
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
@@ -100,7 +100,6 @@ export async function preparePipeline3(storyboard, pipeline1, pipeline2, cfg) {
       structurePath: structureKey,
     };
   });
-
   const renderInput = {
     fps,
     totalDurationSec,
@@ -110,6 +109,13 @@ export async function preparePipeline3(storyboard, pipeline1, pipeline2, cfg) {
     scenes: scenesWithStructureKeys,
     transitions,
   };
-
+  
+  fs.writeFile('user.json', JSON.stringify(renderInput), 'utf8', (err) => {
+    if (err) {
+      console.error("An error occurred while writing the file:", err);
+      return;
+    }
+    console.log("JSON file has been saved successfully!");
+  });  
   return { renderInput };
 }
