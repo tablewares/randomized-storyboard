@@ -37,7 +37,7 @@ export async function runPipeline1(storyboard, config) {
   // ---- 1. Voiceover synthesis + rough per-scene timing --------------------
   const segments = storyboard.scenes.map((s) => ({ id: s.id, text: s.voiceover }));
   const { audioPath, sceneTimings } = await synthesizeAndAlign(segments, voicecfg);
-
+  
   // ---- 2. Template selection per scene, via weighted scoring --------------
   const candidates = Array.from(templateRegistry.values());
   const templateSelections = [];
