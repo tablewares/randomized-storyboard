@@ -33,9 +33,9 @@
         "text": "Here are the top three things you need to know.",
         "sceneId": "scene-1",
         "startSec": 0,
-        "endSec": 2.4,
+        "endSec": 2.2600000000000002,
         "start": 0,
-        "end": 2.4
+        "end": 2.2600000000000002
       },
       "contentWarnings": []
     },
@@ -70,10 +70,10 @@
         "id": "scene-2",
         "text": "Number one: always ship on time.",
         "sceneId": "scene-2",
-        "startSec": 2.4,
-        "endSec": 4.28,
-        "start": 2.4,
-        "end": 4.28
+        "startSec": 2.2600000000000002,
+        "endSec": 4.76,
+        "start": 2.2600000000000002,
+        "end": 4.76
       },
       "contentWarnings": []
     },
@@ -105,10 +105,10 @@
         "id": "scene-3",
         "text": "As Steve Jobs once said, design is not just what it looks like.",
         "sceneId": "scene-3",
-        "startSec": 4.28,
-        "endSec": 8.09,
-        "start": 4.28,
-        "end": 8.09
+        "startSec": 4.76,
+        "endSec": 8.65,
+        "start": 4.76,
+        "end": 8.65
       },
       "contentWarnings": []
     }
