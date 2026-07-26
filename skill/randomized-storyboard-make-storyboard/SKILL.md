@@ -158,12 +158,24 @@ node ~/.hermes/skills/project/randomized-storyboard-make-storyboard/references/s
 ```
 
 A green run prints:
-- `families: lists, quote (2 families)` (or whatever your catalog has)
+- `families: <comma-separated list> (<n> families)` — the catalog's current family
+  list (`lists`, `quote`, `hero`, `stat`, `comparison`, `gallery`, `timeline`, etc.
+  — this grows as templates are added; run the script for the live list, don't
+  hardcode one here).
+- `templates registered: <count>` — the live template count (was 2 originally, has
+  grown well past that — don't treat any older "28 templates / 7 families" snapshot
+  as a contract either; the script's output is the source of truth).
 - `scenes: <n> | warnings: <count>` — non-zero warnings means scenes are scoring
   below `selectionThreshold` or content got truncated. Read `pipeline2-output.json`
   for per-scene `contentWarnings`.
 - exits 0. Any non-zero exit means the storyboard is not renderable in its current
   form and must be fixed.
+
+Note: per-scene `❗ below threshold (X < 0.8) — ...` warnings on long storyboards
+are NORMAL when scenes set `templateId` (template pinning bypasses scoring entirely,
+but the informational warning still fires). Don't chase them by harvesting
+"better keywords" from template manifests — accept them as deliberate-and-logged
+or unpin and let scoring pick.
 
 The script resolves `templatesRoot` from `storyboard.config.json`
 (`./templates`), so you don't pass it separately. If `storyboard.config.json` is
@@ -171,11 +183,14 @@ missing it falls back to `./templates` and `selectionThreshold: 0.4`.
 
 ## When you also need a render
 
-After a green validation run, a real MP4 render needs the full TTS stack
-(`engine/pipeline1/kyutai_tts.js` talks to `localhost:7000/tts` by default;
-`whisperAlign.mjs` shells out to an alignment binary) AND Remotion + chromium.
-Those are out of scope for this skill — hand off to the user for the render step,
-or use the existing `randomized-storyboard` project skill for that path.
+After a green validation run, a real MP4 render needs the full TTS stack:
+`engine/pipeline1/kyutai_tts.js` (`synthesizeVoice` POSTs the concatenated scene
+text to a Kyutai TTS HTTP server — the host/port is configured in that file and has
+moved between sessions, so don't trust a hardcoded port number here; check the file
+for the current value) + `whisperAlign.mjs` (WhisperX alignment via the
+`engine/pipeline1/.venv` Python env) + Remotion + chromium. Those are out of
+scope for this skill — hand off to the user for the render step, or use the
+existing `randomized-storyboard` project skill for that path.
 
 ## Completion criteria
 
@@ -198,6 +213,19 @@ or use the existing `randomized-storyboard` project skill for that path.
 | `id` missing from root → output file is `undefined.mp4` | The engine uses `storyboard.id` as the MP4 filename. Always set `id`. |
 | `content.tags` given non-array | Registry says `tags` is `array`; pipeline 2 will not coerce — it'll be dropped. |
 | Template you reference isn't in `templates/` | Either add it (see `randomized-storyboard-make-template`) or remove `templateId` to let scoring pick. |
+| Editing `score-storyboard.mjs` and the run prints `pipeline 2 — hydration:` with no scene rows | `runPipeline2` is async (the media-resolver touches the filesystem). Every caller MUST `await` it — forgetting the `await` yields a Promise, pipeline 3 receives an array of Promises, every `structurePath` lookup misses, and the "Missing template" card renders for every scene *without throwing*. If your edit changed the call from `runPipeline2(...)` to `await runPipeline2(...)` or vice versa, this skill's `references/score-storyboard.mjs` + `orchestrator.js` + `examples/run-example.js` are the three known call sites — all three must use `await`. Symptom is indistinguishable from the pipeline-3 "key divergence" bug, so grep first. |
+| `write_file` rejects a storyboard JSON with `"'content' must be a string, got dict"` | The harness coerces a JSON-looking `content` arg into an object. Fall back to writing via `terminal` heredoc (`cat > path <<'EOF' ... EOF`) and validate with `python3 -c "import json;json.load(open('path'))"`. This is profile-wide, not story-specific — prefer heredoc for any structured JSON in this repo. Don't retry `write_file`; it'll keep failing identical-args. |
+| All scenes render as "Missing template" but `score-storyboard.mjs` passed | Re-check `render-input.json` per scene: if `structurePath` is empty or the key isn't in `STRUCTURE_COMPONENTS`, pipeline 3 fell through. Usually a missed `await runPipeline2` (row above) or stale `Structures.jsx` after a template-key format change — regenerate via `node main.js` (it always regenerates `Structures.jsx` before render). |
+
+## References
+
+- `references/score-storyboard.mjs` — validation script (authoritative, see above).
+- `references/list-templates.mjs` — list every discovered template in the catalog.
+- `references/multi-variation-research.md` — workflow + opencli-yandex-images
+  usage for the "one researched story → multiple drastically different storyboards"
+  class of work (research → 3 variations → validate → compile via `node main.js`).
+  Includes the yandex adapter install step, reliability ranking of image sources,
+  and the per-variation completion checklist.
 
 ## What NOT to do
 

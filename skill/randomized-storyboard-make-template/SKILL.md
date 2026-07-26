@@ -22,6 +22,13 @@ match against storyboard scenes with zero engine code edits.
 All paths below are relative to **`/home/tablewares/random/randomized-storyboard`**.
 The engine source lives in `engine/`; the template catalog lives in `templates/`.
 
+When the user references a DESIGN.md spec in the repo (e.g. `designmd/claude/DESIGN.md`)
+as the basis for new templates, translate its design tokens into the template
+`style` surface using the mapping in `references/design-md-to-style-surface.md`.
+That reference covers which DESIGN.md `colors.*` / `typography.*` keys fill each
+`StandardStyleVars` slot, which DESIGN.md components map to which template family,
+and the brand-specific "Do's and Don'ts" that constrain structure jsx.
+
 ## What a "template" is (in this engine)
 
 A template is a **folder** on disk containing:
@@ -172,6 +179,27 @@ export default function MyStructure({ content, style }) {
 - The first scene starts cold; transitions between scenes (`cut`, `fade`,
   `slide-left`, `slide-up`, `wipe`, `zoom-blend`) are picked from the master seed
   and rendered by the outer `TransitionSeries`.
+- **Rendering image / `images` / `icon` / `video` content keys:** pipeline 2's
+  `resolveMediaContent` has already rewritten local files to `{ url: "media/<basename>",
+  alt?, isStatic: true }` and passed remote URLs through as `{ ..., isStatic: false }`
+  (see the `randomized-storyboard` umbrella skill's "Media hydration contract"
+  pitfall). Do NOT construct `<img src={im.url}>` directly — a bare `<img>` doesn't
+  `delayRender` (first frames paint blank during the fetch) and won't route local
+  basenames through `staticFile()`. Use the shared helper:
+
+  ```jsx
+  import { Media } from "../../../engine/pipeline3/Media.jsx";
+  // image / icon / each entry of images:
+  <Media src={content.image} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+  // video:
+  <Media kind="video" src={content.video} style={{ width: "100%", height: "100%" }} />
+  ```
+
+  `Media` reads `isStatic` and routes to `<Img src={staticFile(url)}>` for locals or
+  `<Img src={url}>` for remotes (or `<OffthreadVideo>` for `kind="video"`). The
+  relative import depth is one `../` per directory level between the structure file
+  and repo root (3 levels deep for `templates/<family>/<id>/structure*.jsx` ⇒
+  `../../../engine/pipeline3/Media.jsx`).
 
 ## How to author — numbered
 
@@ -218,15 +246,37 @@ node ~/.hermes/skills/project/randomized-storyboard-make-template/references/val
 node ~/.hermes/skills/project/randomized-storyboard-make-template/references/validate-template.mjs
 ```
 
-A green run prints:
-- `template: <family>/<id> — OK` for each template that passed
-- `issues: 0` total
+A green run prints one row per template plus a final `issues:` line:
+- `[OK] <family>/<id>  req:<keys>  variations:<ids>` for each template that passed
+  (e.g. `[OK] lists/basic  req:title,items  variations:default,bold-numbered`);
+  `req:(none)` when no key is `required`.
+- `issues: 0`
 - Exit 0 if every template passed; exit 1 if ANY discovered template had issues.
 
-A red run lists specific issues (`unknown content key`, `missing structure file`,
-`duplicate variation id`, `manifest zero variations`) — read the messages, fix
-the manifest, re-run. Issues are COLLECTED not thrown, so you'll see every
-problem at once.
+A red run prints `[FAIL] <family>/<id> ...` rows and an `issues (<n>):` block listing
+each issue as `<path-relative-to-project-root>: <message>`. Issues are COLLECTED not
+thrown, so the run reports every problem at once — fix them as a batch and re-run.
+The script's best-effort dynamic-import of each `.jsx` surfaces a `WARN` (NOT a fail)
+when Node's stock loader rejects the `.jsx` extension (expected — Remotion's esbuild
+handles JSX at render time); it only counts as a real `FAIL` when the error message
+looks like a true syntax/import error.
+
+**The discovery validator does NOT actually compile the JSX** (Node's stock ESM loader
+aborts on the `.jsx` extension before parsing). To catch genuine JSX/syntax errors the
+render-time bundler would reject, run the compile-verification script:
+
+```bash
+# esbuild-compiles every structure .jsx in the catalog (or one folder) — the exact
+# transpiler Remotion uses at render — plus re-runs the discovery validator + a
+# manifest structural re-check. EXITS 0 only when all three stages pass.
+node ~/.hermes/skills/project/randomized-storyboard-make-template/scripts/verify-template-compile.mjs [templates/<family>/<id>/]
+```
+
+Run this AFTER step 5's discovery validator. It writes nothing to disk. A green run
+prints `[pass]` rows for: discovery `issues:0` + every structure compiled by esbuild +
+every `supportedContentKeys` entry in registry + unique variation ids + referenced
+structure files exist and are non-empty. Use it before committing a new template or
+after any structure-file edit.
 
 ## Run template folder structure AFTER creation
 
@@ -262,13 +312,38 @@ No registry files to touch, no `populateRegistry.js` step, no template-mapping
 | `supportedContentKeys` includes a non-registry key | Discovery will fail validation with `unknown key "X" — not in the standardized content key registry`. Use only the 17 keys listed above. Add new keys to `engine/contentKeys/registry.js` first (out of scope for this skill). |
 | `variations[].structure` path is wrong | It's relative to the MANIFEST'S folder, not to `templates/`. So if both files sit next to each other, just the filename `"structure1.jsx"` is correct. |
 | Two variations point at the same `structure` file | They'll render identically — variation choice then only changes `style`/`animation` from the manifest. That's rarely what you want. Give each variation its own file. |
+| Authoring `manifest.json` via `write_file` rejects the content with `'content' must be a string, got dict` | The Hermes `write_file` tool auto-detects JSON-shaped strings and parses them into objects before checking the `content` arg, so a JSON-string `content` is rejected. Write `manifest.json` via the terminal instead: `cat > path/manifest.json <<'EOF' ...EOF` then validate with `python3 -c "import json; json.load(open('path'))"`. The same applies to any other `.json` file authored through `write_file`. |
+| Duplicate React style keys in one object literal (`{ opacity: 0.9, opacity: fade(14) }`) | Not a parse error — JS object literals silently keep the LAST key, so the first becomes a no-op. But it's a readability bug and the compiler won't flag it. When layering an animation `interpolate(...)` on top of a base style, add `opacity: fade(N)` and DON'T also write a static `opacity:` earlier in the same object. esbuild won't catch it; only code review will. |
 | Structure jsx imports from `react-router`, `next/*`, or other libs | Those aren't bundled; only `react`, `remotion`, and `@remotion/transitions/*` are available at render time. Stick to inline styles and standard React + Remotion primitives. |
 | Structure jsx uses `useVideoConfig`'s `durationInFrames` to animate | The outer `TransitionSeries.Sequence` already bounds duration; if your structure depends on knowing its end frame, use `useCurrentFrame()` and `math` against `durationInFrames` — but for fade-out, either omit it (the outer transition handles it) or compute from `useVideoConfig().durationInFrames`. |
 | Folder name doesn't match `manifest.id` | Not a bug — `id` defaults to the folder name, but if you want a different public id, set `manifest.id` explicitly. The folder name alone determines nothing else. |
 | Template nested under another template | Discovery STOPS descending once it finds a `manifest.json` in a folder. So `templates/parts/header/manifest.json` inside a `header/` folder with its own manifest will be discovered, but you can't nest a manifest inside a template's own folder. |
 
-## What NOT to do
+## Sibling-skill consolidation (2025-07-25)
 
+A previous sibling skill `randomized-storyboard-template-loop` covered the same
+template-creation workflow but was written against the abandoned `src/` layout
+(`index.jsx` + `layout` prop, `key`/`capacity`/`layoutVariants` schema,
+`populateRegistry.js` registration step). It was consolidated INTO this skill
+because `make-template` and its live `validate-template.mjs` reference script
+already cover the full create-validate-smoke-test loop against the real `engine/`.
+
+**Workflow preference encoded here for future sessions:** when a sibling skill in
+the same project covers the same class of work but is written against an
+abandoned layout, consolidate it into the up-to-date umbrella rather than
+maintaining duplicates. Don't re-create a `template-loop` skill for batched
+multi-template creation — extend this skill instead (add a `scripts/` automation
+helper under `references/validate-template.mjs`'s sibling structure if you need
+batched creation + validation in one driver).
+
+The heavier pattern (the old `template-loop` had automation scripts that walked
+a `TEMPLATE_DEFINITIONS` array and wrote `manifest.json` + `index.jsx` for each)
+is fine to recreate as a `scripts/` helper here when the user actually asks for
+batched creation. What is NOT fine is re-introducing a separate skill that
+re-describes the manifest schema from scratch — that re-introduces the drift
+problem this consolidation fixed.
+
+## What NOT to do
 - Do NOT register templates in any "registry" file — the engine uses
   `discoverTemplates()` at orchestrator time and `copyStructures.js` at render
   time. Old skill prose referencing `src/pipeline3/populateRegistry.js` is stale

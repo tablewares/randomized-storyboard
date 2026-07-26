@@ -1,0 +1,130 @@
+{
+  "id": "moxie-cinematic-arc",
+  "seed": "moxie-cinema-7",
+  "fps": 30,
+  "voice": { "provider": "kyutai", "voiceId": "george" },
+  "music": { "path": "music.mp3", "volume": 0.18 },
+  "globalStyle": {
+    "palette": { "background": "#05060a", "foreground": "#efe9dc", "accent": "#d4a24b", "muted": "#6b6357" },
+    "font": { "heading": "Georgia, serif", "body": "Inter, sans-serif", "scale": 1.06 },
+    "spacing": { "scale": 1.1 },
+    "radius": 4
+  },
+  "scenes": [
+    {
+      "id": "cold-open",
+      "voiceover": "For most of history, the air we breathe belonged only to Earth.",
+      "templateId": "hero/title-card",
+      "keywords": ["hero", "title", "open", "thesis", "cold-open"],
+      "content": {
+        "title": "Air Beyond Earth",
+        "subtitle": "A small box on Mars changes that.",
+        "date": "April 20, 2021 — Jezero Crater"
+      },
+      "styleOverrides": {
+        "palette": { "background": "#05060a", "accent": "#d4a24b" },
+        "font": { "scale": 1.2 }
+      }
+    },
+    {
+      "id": "the-quote",
+      "voiceover": "Oxygen isn't just the stuff we breathe. Rocket propellant depends on oxygen.",
+      "templateId": "hero/quote-hero",
+      "keywords": ["quote", "hero", "propellant", "nasa"],
+      "content": {
+        "quote": "Oxygen isn't just the stuff we breathe. Rocket propellant depends on oxygen, and future explorers will depend on producing propellant on Mars to make the trip home.",
+        "title": "Jim Reuter, NASA STMD",
+        "caption": "April 21, 2021"
+      },
+      "styleOverrides": {
+        "palette": { "background": "#0c0a08", "accent": "#d4a24b" }
+      }
+    },
+    {
+      "id": "headline-stat",
+      "voiceover": "One hundred twenty-two grams. Twice the original goal, at ninety-eight percent purity.",
+      "templateId": "stat/headline",
+      "keywords": ["stat", "number", "kpi", "headline", "purity"],
+      "content": {
+        "number": 9.8,
+        "label": "GRAMS OF OXYGEN — FINAL RUN",
+        "caption": "122g total at 98%+ purity, peaking at 12 g/hour — twice NASA's target.",
+        "source": "NASA / JPL-Caltech, MIT Haystack"
+      },
+      "styleOverrides": {
+        "palette": { "accent": "#e0b65c" }
+      }
+    },
+    {
+      "id": "two-numbers",
+      "voiceover": "One metric ton for breathing. Twenty-five metric tons to lift off.",
+      "templateId": "stat/two-up",
+      "keywords": ["stat", "compare", "two", "kpi", "liftoff", "breath"],
+      "content": {
+        "number": 1,
+        "value": "25 metric tons",
+        "label": "TONS — LIFE SUPPORT FOR A YEAR",
+        "source": "NASA mission projection",
+        "caption": "Breathing: 1 ton. Lifting off Mars: 25 tons. That's why local oxygen matters."
+      },
+      "styleOverrides": {
+        "palette": { "accent": "#d4a24b" }
+      }
+    },
+    {
+      "id": "journey",
+      "voiceover": "Launch. Land. First breath on Mars. Scale it two hundred times. And one day, lift off again.",
+      "templateId": "timeline/journey",
+      "keywords": ["timeline", "journey", "steps", "path", "milestones", "mars"],
+      "content": {
+        "title": "The Path to Air on Mars",
+        "items": [
+          "July 30, 2020 — Atlas V launches Perseverance",
+          "Feb 18, 2021 — touch-down in Jezero Crater",
+          "April 20, 2021 — first 5.37g of Martian oxygen",
+          "Aug 7, 2023 — 16th and final run, 9.8g more",
+          "Next — a 200x larger MOXIE, with a 25–30 kW power plant",
+          "2030s — breathable air and return-propellant for a crew"
+        ]
+      },
+      "styleOverrides": {
+        "palette": { "accent": "#d4a24b" }
+      }
+    },
+    {
+      "id": "how-list",
+      "voiceover": "Compress thin CO2. Heat it to eight hundred degrees. Split it with solid oxide. Breathe.",
+      "templateId": "lists/basic",
+      "keywords": ["list", "steps", "how", "process", "science"],
+      "content": {
+        "title": "How MOXIE Makes Air",
+        "description": "The toaster-sized unit takes in Martian CO2 and yields 99.6% pure O2.",
+        "items": [
+          "Pull in thin CO2 through a HEPA filter",
+          "Compress with a scroll pump to ~1 atmosphere",
+          "Heat to ~800°C (1,470°F) inside a solid-oxide cell",
+          "Electrolyze CO2 into oxygen ions and carbon monoxide",
+          "Release 99.6% pure O2 — vent the rest"
+        ]
+      },
+      "styleOverrides": {
+        "palette": { "accent": "#e0b65c" }
+      }
+    },
+    {
+      "id": "closing-statement",
+      "voiceover": "A toaster-shaped box just brewed air on another world. The trip home just got a little closer.",
+      "templateId": "hero/split-byline",
+      "keywords": ["hero", "byline", "close", "thesis", "trip-home"],
+      "content": {
+        "title": "Air on another world.",
+        "subtitle": "MOXIE, Perseverance, and the first breath off-Earth.",
+        "author": "Operator: NASA / JPL-Caltech",
+        "date": "Ceased operations: Aug 3, 2023"
+      },
+      "styleOverrides": {
+        "palette": { "background": "#05060a", "accent": "#d4a24b" }
+      }
+    }
+  ]
+}

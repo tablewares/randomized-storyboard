@@ -1,0 +1,49 @@
+{
+  "id": "moxie-snappy-listicle",
+  "seed": "moxie-listicle-1",
+  "fps": 30,
+  "voice": { "provider": "kyutai", "voiceId": "george" },
+  "globalStyle": {
+    "palette": { "background": "#0b1020", "foreground": "#f5f7fb", "accent": "#ff6b3d" },
+    "font": { "heading": "Inter, sans-serif", "body": "Inter, sans-serif", "scale": 1.1 },
+    "spacing": { "scale": 1.05 },
+    "radius": 16
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "voiceover": "Mars just made oxygen. Here are the three numbers that matter.",
+      "templateId": "hero/title-card",
+      "keywords": ["hero", "title", "open", "headline", "mars"],
+      "content": {
+        "title": "MOXIE Made Oxygen on Mars",
+        "subtitle": "NASA's Perseverance rover, Jezero Crater, Aug 2023"
+      }
+    },
+    {
+      "id": "three-facts",
+      "voiceover": "Sixteen runs, one hundred twenty-two grams total, and ninety-eight percent pure.",
+      "templateId": "lists/basic",
+      "keywords": ["list", "ranking", "top", "numbers", "facts"],
+      "content": {
+        "title": "The Numbers",
+        "number": 16,
+        "items": [
+          "16 oxygen production runs",
+          "122g total — about a small dog's 10-hour breath",
+          "98% purity or better"
+        ]
+      }
+    },
+    {
+      "id": "closer",
+      "voiceover": "So humanity has now brewed air on another planet. That's the takeaway.",
+      "templateId": "hero/center-statement",
+      "keywords": ["statement", "thesis", "close", "takeaway"],
+      "content": {
+        "title": "We made air on another planet.",
+        "subtitle": "First resource extracted off-world for human use."
+      }
+    }
+  ]
+}

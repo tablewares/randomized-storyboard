@@ -135,7 +135,7 @@ for (const sel of pipeline1.templateSelections) {
 
 let pipeline2;
 try {
-  pipeline2 = runPipeline2(storyboard, pipeline1, { templateRegistry: registry });
+  pipeline2 = await runPipeline2(storyboard, pipeline1, { templateRegistry: registry });
 } catch (e) {
   fail("runPipeline2 threw", e);
 }
