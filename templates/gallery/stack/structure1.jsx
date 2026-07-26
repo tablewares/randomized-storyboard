@@ -1,5 +1,6 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, interpolate } from "remotion";
+import { Media } from "../../../engine/pipeline3/Media.jsx";
 /** Stacked deck of images, each sliding into view per frame. */
 export default function GalleryStack({ content, style }) {
   const frame = useCurrentFrame();
@@ -16,7 +17,7 @@ export default function GalleryStack({ content, style }) {
           const x = interpolate(frame - d, [0, 14], [120, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
           return (
             <div key={i} style={{ position: "absolute", inset: 0, opacity: o, transform: `translateX(${x}px) rotate(${(i % 2 ? -1 : 1) * 1.5}deg)`, borderRadius: 16, overflow: "hidden", boxShadow: `0 12px 40px ${palette.background ?? "#000"}66` }}>
-              {im?.url ? <img src={im.url} alt={im.alt ?? ""} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : null}
+              <Media src={im} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
           );
         })}

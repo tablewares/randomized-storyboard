@@ -1,5 +1,6 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, interpolate } from "remotion";
+import { Media } from "../../../engine/pipeline3/Media.jsx";
 /** Single hero image that slowly zooms (Ken Burns). */
 export default function GallerySingleZoom({ content, style }) {
   const frame = useCurrentFrame();
@@ -10,7 +11,7 @@ export default function GallerySingleZoom({ content, style }) {
   return (
     <AbsoluteFill style={{ background: palette.background ?? "#0b0b12", color: palette.foreground ?? "#fff", fontFamily: style.font?.heading ?? "Inter, sans-serif" }}>
       <AbsoluteFill style={{ overflow: "hidden" }}>
-        {image?.url ? <img src={image.url} alt={image.alt ?? ""} style={{ width: "100%", height: "100%", objectFit: "cover", transform: `scale(${z})` }} /> : null}
+        <Media src={image} style={{ width: "100%", height: "100%", objectFit: "cover", transform: `scale(${z})` }} />
         <AbsoluteFill style={{ background: "linear-gradient(to top, rgba(0,0,0,0.65), transparent 55%)" }} />
       </AbsoluteFill>
       <AbsoluteFill style={{ justifyContent: "flex-end", padding: 80, flexDirection: "column" }}>

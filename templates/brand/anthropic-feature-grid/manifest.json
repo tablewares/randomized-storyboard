@@ -1,0 +1,53 @@
+{
+  "id": "anthropic-feature-grid",
+  "family": "brand",
+  "description": "Anthropic warm-editorial 3-up feature card grid. Each item renders as a surface-card with title + body. Cream canvas, coral accents, serif headings.",
+  "keywords": ["feature", "grid", "cards", "anthropic", "editorial", "highlights", "capabilities", "three-up"],
+  "supportedContentKeys": {
+    "title":       { "required": true, "maxChars": 60 },
+    "description": { "maxChars": 140 },
+    "items":       { "required": true, "maxItems": 3 }
+  },
+  "variations": [
+    {
+      "id": "cream-grid",
+      "structure": "structure1.jsx",
+      "animation": "stagger-fade-up",
+      "weight": 1,
+      "style": {
+        "palette": {
+          "background": "#faf9f5",
+          "foreground": "#141413",
+          "accent": "#cc785c",
+          "muted": "#6c6a64",
+          "primary": "#efe9de"
+        },
+        "font": {
+          "heading": "\"Cormorant Garamond, Tiempos Headline, serif\"",
+          "body": "\"Inter, sans-serif\"",
+          "scale": 1
+        }
+      }
+    },
+    {
+      "id": "dark-grid",
+      "structure": "structure2.jsx",
+      "animation": "stagger-fade-up",
+      "weight": 0.75,
+      "style": {
+        "palette": {
+          "background": "#181715",
+          "foreground": "#faf9f5",
+          "accent": "#cc785c",
+          "muted": "#a09d96",
+          "primary": "#252320"
+        },
+        "font": {
+          "heading": "\"Cormorant Garamond, Tiempos Headline, serif\"",
+          "body": "\"Inter, sans-serif\"",
+          "scale": 1
+        }
+      }
+    }
+  ]
+}

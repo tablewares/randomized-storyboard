@@ -1,5 +1,6 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, interpolate } from "remotion";
+import { Media } from "../../../engine/pipeline3/Media.jsx";
 /** Collage: irregular grid of up to 4 images anchored at the corners. */
 export default function GalleryCollage({ content, style }) {
   const frame = useCurrentFrame();
@@ -23,7 +24,7 @@ export default function GalleryCollage({ content, style }) {
           const s = spots[i] ?? {};
           return (
             <div key={i} style={{ position: "absolute", ...s, opacity: o, transform: `scale(${sc})`, transformOrigin: "center", borderRadius: 16, overflow: "hidden", boxShadow: `0 8px 30px ${palette.background ?? "#000"}55` }}>
-              {im?.url ? <img src={im.url} alt={im.alt ?? ""} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : null}
+              <Media src={im} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
           );
         })}

@@ -14,6 +14,11 @@
  * @typedef {Object} ContentImage
  * @property {string} url - remote url or local path, resolved by the template's renderer
  * @property {string} [alt]
+ * @property {boolean} [isStatic] - set by pipeline 2's resolveMediaContent:
+ *        true when `url` has been rewritten to a staticFile()-safe basename
+ *        (e.g. "media/foo.png") and the source file staged under public/media/.
+ *        false (or absent) for remote http(s)/data URLs that renderers should
+ *        use verbatim. Structures switch on this via engine/pipeline3/Media.jsx.
  */
 
 /**

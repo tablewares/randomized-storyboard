@@ -1,0 +1,54 @@
+{
+  "id": "anthropic-code-window",
+  "family": "brand",
+  "description": "Anthropic dark-surface code editor mockup card. JetBrains Mono code with line numbers on surface-dark. The signature Claude Code visual.",
+  "keywords": ["code", "terminal", "editor", "dark", "anthropic", "developer", "monospace", "snippet", "command"],
+  "supportedContentKeys": {
+    "title":       { "required": true, "maxChars": 60 },
+    "description": { "maxChars": 140 },
+    "items":       { "required": true, "maxItems": 10 },
+    "caption":     { "maxChars": 100 }
+  },
+  "variations": [
+    {
+      "id": "editor",
+      "structure": "structure1.jsx",
+      "animation": "line-reveal",
+      "weight": 1,
+      "style": {
+        "palette": {
+          "background": "#181715",
+          "foreground": "#faf9f5",
+          "accent": "#cc785c",
+          "muted": "#a09d96",
+          "primary": "#1f1e1b"
+        },
+        "font": {
+          "heading": "\"Cormorant Garamond, Tiempos Headline, serif\"",
+          "body": "\"Inter, sans-serif\"",
+          "scale": 1
+        }
+      }
+    },
+    {
+      "id": "terminal",
+      "structure": "structure2.jsx",
+      "animation": "line-reveal",
+      "weight": 0.75,
+      "style": {
+        "palette": {
+          "background": "#181715",
+          "foreground": "#faf9f5",
+          "accent": "#cc785c",
+          "muted": "#a09d96",
+          "primary": "#1f1e1b"
+        },
+        "font": {
+          "heading": "\"Cormorant Garamond, Tiempos Headline, serif\"",
+          "body": "\"Inter, sans-serif\"",
+          "scale": 1
+        }
+      }
+    }
+  ]
+}

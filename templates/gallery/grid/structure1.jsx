@@ -1,5 +1,6 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, interpolate } from "remotion";
+import { Media } from "../../../engine/pipeline3/Media.jsx";
 /** Image grid: renders up to 4 images as square tiles with captions if present. */
 export default function GalleryGrid({ content, style }) {
   const frame = useCurrentFrame();
@@ -17,7 +18,7 @@ export default function GalleryGrid({ content, style }) {
           const sc = interpolate(frame - d, [0, 14], [0.85, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
           return (
             <div key={i} style={{ opacity: o, transform: `scale(${sc})`, aspectRatio: "1", borderRadius: 14, overflow: "hidden", background: palette.muted ?? "#222" }}>
-              {im?.url ? <img src={im.url} alt={im.alt ?? ""} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : null}
+              <Media src={im} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
           );
         })}

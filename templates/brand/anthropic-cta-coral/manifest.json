@@ -1,0 +1,52 @@
+{
+  "id": "anthropic-cta-coral",
+  "family": "brand",
+  "description": "Anthropic full-bleed callout / CTA band. Default is coral callout-coral (#cc785c), dark variation is surface-dark. Serif display headline, uppercase eyebrow label.",
+  "keywords": ["cta", "callout", "action", "coral", "try", "anthropic", "sign-up", "convert", "prompt"],
+  "supportedContentKeys": {
+    "title":       { "required": true, "maxChars": 80 },
+    "subtitle":    { "maxChars": 120 },
+    "description": { "maxChars": 160 },
+    "label":       { "maxChars": 24 }
+  },
+  "variations": [
+    {
+      "id": "coral",
+      "structure": "structure1.jsx",
+      "animation": "fade-up",
+      "weight": 1,
+      "style": {
+        "palette": {
+          "background": "#cc785c",
+          "foreground": "#ffffff",
+          "accent": "#ffffff",
+          "muted": "#f3e3d3"
+        },
+        "font": {
+          "heading": "\"Cormorant Garamond, Tiempos Headline, serif\"",
+          "body": "\"Inter, sans-serif\"",
+          "scale": 1
+        }
+      }
+    },
+    {
+      "id": "dark",
+      "structure": "structure2.jsx",
+      "animation": "fade-up",
+      "weight": 0.75,
+      "style": {
+        "palette": {
+          "background": "#181715",
+          "foreground": "#faf9f5",
+          "accent": "#cc785c",
+          "muted": "#a09d96"
+        },
+        "font": {
+          "heading": "\"Cormorant Garamond, Tiempos Headline, serif\"",
+          "body": "\"Inter, sans-serif\"",
+          "scale": 1
+        }
+      }
+    }
+  ]
+}

@@ -1,11 +1,18 @@
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { deriveRng, pickWeighted } from "../random/seededRandom.js";
 import { validateAndTruncateContent } from "../contentKeys/registry.js";
 import { mergeStyles } from "./styleMerge.js";
+import { resolveMediaContent } from "./resolveMedia.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * @typedef {Object} Pipeline2Config
  * @property {import("../../types.js").TemplateRegistry} templateRegistry
+ * @property {string} [publicDir] - absolute path to the Remotion public/
+ *        folder, used by resolveMediaContent to stage local image/video files
+ *        for staticFile() at render time. Defaults to "<repoRoot>/public".
  */
 
 /**
@@ -20,14 +27,23 @@ import { mergeStyles } from "./styleMerge.js";
  * @param {import("../../types.js").Storyboard} storyboard
  * @param {import("../../types.js").Pipeline1Output} pipeline1
  * @param {Pipeline2Config} config
- * @returns {import("../../types.js").Pipeline2Output}
+ * @returns {Promise<import("../../types.js").Pipeline2Output>}
  */
-export function runPipeline2(storyboard, pipeline1, config) {
-  const { templateRegistry } = config;
+export async function runPipeline2(storyboard, pipeline1, config) {
+  const { templateRegistry, publicDir } = config;
+  // Default public/ folder to the repo-root public/ directory that pipeline 3
+  // also writes into — keeps media staging co-located with audio/sfx when the
+  // orchestrator doesn't pass an explicit publicDir override.
+  const resolvedPublicDir = publicDir ?? path.join(__dirname, "../../public");
   const timingBySceneId = new Map(pipeline1.sceneTimings.map((t) => [t.sceneId, t]));
   const selectionBySceneId = new Map(pipeline1.templateSelections.map((s) => [s.sceneId, s]));
 
-  const hydratedScenes = storyboard.scenes.map((scene) => {
+  // Hydrate scenes sequentially (resolveMediaContent touches the filesystem
+  // — copying local media into public/media/. Parallelism would race on
+  // mkdirs/duplicate basenames; sequential keeps per-scene warnings ordered
+  // with scene position, matching how pipeline 1 reports).
+  const hydratedScenes = [];
+  for (const scene of storyboard.scenes) {
     const selection = selectionBySceneId.get(scene.id);
     if (!selection) throw new Error(`Pipeline 1 produced no template selection for scene "${scene.id}".`);
 
@@ -41,14 +57,24 @@ export function runPipeline2(storyboard, pipeline1, config) {
     const rng = deriveRng(storyboard.seed, "variation", scene.id, template.templateId);
     const variation = pickWeighted(rng, template.variations);
 
-    const { content, warnings: contentWarnings } = validateAndTruncateContent(
+    const { content: validatedContent, warnings: contentWarnings } = validateAndTruncateContent(
       scene.content,
       template.supportedContentKeys
     );
 
+    // Media hydration: walk the *validated* content (so we only resolve
+    // media keys the template declared support for) and stage any local
+    // image/video files into public/media/ so Remotion's staticFile() can
+    // serve them at render. Remote URLs pass through unchanged. Emits
+    // per-entry warnings for missing files / failed copies so the orchestrator's
+    // pipeline2-output.json carries the same fidelity as content truncation.
+    const { content, mediaWarnings } = await resolveMediaContent(validatedContent, {
+      publicDir: resolvedPublicDir,
+    });
+
     const style = mergeStyles(variation.style, storyboard.globalStyle, scene.styleOverrides);
 
-    return {
+    hydratedScenes.push({
       sceneId: scene.id,
       family: template.family,
       templateId: template.templateId,
@@ -58,9 +84,9 @@ export function runPipeline2(storyboard, pipeline1, config) {
       content,
       style,
       timing,
-      contentWarnings,
-    };
-  });
+      contentWarnings: [...contentWarnings, ...mediaWarnings],
+    });
+  }
 
   return { hydratedScenes };
 }

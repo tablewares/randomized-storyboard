@@ -1,0 +1,52 @@
+{
+  "id": "anthropic-quote",
+  "family": "brand",
+  "description": "Anthropic editorial pull-quote. Cream-canvas default, dark-navy inverted variation. Oversized serif opening mark, coral accent rule, uppercase tracked attribution.",
+  "keywords": ["quote", "pull-quote", "testimonial", "anthropic", "editorial", "voice", "statement", "pull"],
+  "supportedContentKeys": {
+    "quote":   { "required": true, "maxChars": 220 },
+    "author":  { "maxChars": 40 },
+    "source":  { "maxChars": 50 },
+    "caption": { "maxChars": 100 }
+  },
+  "variations": [
+    {
+      "id": "cream",
+      "structure": "structure1.jsx",
+      "animation": "fade-up",
+      "weight": 1,
+      "style": {
+        "palette": {
+          "background": "#faf9f5",
+          "foreground": "#141413",
+          "accent": "#cc785c",
+          "muted": "#6c6a64"
+        },
+        "font": {
+          "heading": "\"Cormorant Garamond, Tiempos Headline, serif\"",
+          "body": "\"Inter, sans-serif\"",
+          "scale": 1
+        }
+      }
+    },
+    {
+      "id": "dark",
+      "structure": "structure2.jsx",
+      "animation": "fade-up",
+      "weight": 0.75,
+      "style": {
+        "palette": {
+          "background": "#181715",
+          "foreground": "#faf9f5",
+          "accent": "#cc785c",
+          "muted": "#a09d96"
+        },
+        "font": {
+          "heading": "\"Cormorant Garamond, Tiempos Headline, serif\"",
+          "body": "\"Inter, sans-serif\"",
+          "scale": 1
+        }
+      }
+    }
+  ]
+}

@@ -50,7 +50,7 @@ export async function runStoryboardEngine(opts) {
   }
 
   // ---- Pipeline 2: variation selection + content/style hydration --------
-  const pipeline2 = runPipeline2(opts.storyboard, pipeline1, { templateRegistry: registry });
+  const pipeline2 = await runPipeline2(opts.storyboard, pipeline1, { templateRegistry: registry });
   await writeFile(path.join(opts.outputDir, "pipeline2-output.json"), JSON.stringify(pipeline2, null, 2));
 
   // ---- Pipeline 3: assemble render input, then render with Remotion -----

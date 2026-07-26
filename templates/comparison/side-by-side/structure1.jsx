@@ -1,5 +1,6 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, interpolate } from "remotion";
+import { Media } from "../../../engine/pipeline3/Media.jsx";
 /** Side-by-side comparison: two columns A vs B using items grouped in pairs, or images. */
 export default function CompareSideBySide({ content, style }) {
   const frame = useCurrentFrame();
@@ -15,7 +16,7 @@ export default function CompareSideBySide({ content, style }) {
     <div style={{ flex: 1, opacity: side === "l" ? opL : opR, display: "flex", flexDirection: "column", alignItems: align }}>
       {images.length > 0 && images[side === "l" ? 0 : 1] && (
         <div style={{ width: 360, height: 220, borderRadius: 14, marginBottom: 24, overflow: "hidden", background: palette.muted ?? "#222" }}>
-          {(() => { const im = images[side === "l" ? 0 : 1]; return im?.url ? <img src={im.url} alt={im.alt ?? ""} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : null; })()}
+          <Media src={images[side === "l" ? 0 : 1]} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
       )}
       <div style={{ fontSize: 56 * scale, fontWeight: 800, color: side === "l" ? palette.accent : palette.primary }}>{side.head}</div>
