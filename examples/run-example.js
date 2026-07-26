@@ -60,7 +60,7 @@ async function main() {
     console.warn("template selection warnings (agent should review):", pipeline1.warnings);
   }
 
-  const pipeline2 = runPipeline2(storyboard, pipeline1, { templateRegistry: registry });
+  const pipeline2 = await runPipeline2(storyboard, pipeline1, { templateRegistry: registry });
   const { renderInput } = await preparePipeline3(storyboard, pipeline1, pipeline2, cfg);
 
   console.log(JSON.stringify({ pipeline1, pipeline2, renderInput }, null, 2));

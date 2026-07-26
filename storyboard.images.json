@@ -1,0 +1,49 @@
+{
+  "id": "storyboard-images-demo",
+  "seed": "media-42",
+  "fps": 30,
+  "voice": { "provider": "fake-tts", "voiceId": "narrator-1" },
+  "scenes": [
+    {
+      "id": "hero-image",
+      "voiceover": "First, take a close look at this image.",
+      "keywords": ["hero", "image", "single", "zoom", "ken-burns", "photograph"],
+      "content": {
+        "title": "The Reference",
+        "caption": "Source: Pinterest originals archive",
+        "image": {
+          "url": "https://i.pinimg.com/originals/1f/b6/bb/1fb6bb4cc27a5109fdd6a8acc7495a22.jpg?nii=t",
+          "alt": "Reference composition from Pinterest archive"
+        }
+      }
+    },
+    {
+      "id": "gallery-row",
+      "voiceover": "Now here it is shown alongside study crops.",
+      "keywords": ["gallery", "row", "captioned", "images", "compare"],
+      "content": {
+        "title": "Crops & Variations",
+        "images": [
+          { "url": "https://i.pinimg.com/originals/1f/b6/bb/1fb6bb4cc27a5109fdd6a8acc7495a22.jpg?nii=t", "alt": "Full reference" },
+          { "url": "https://i.pinimg.com/originals/1f/b6/bb/1fb6bb4cc27a5109fdd6a8acc7495a22.jpg?nii=t", "alt": "Detail crop A" },
+          { "url": "https://i.pinimg.com/originals/1f/b6/bb/1fb6bb4cc27a5109fdd6a8acc7495a22.jpg?nii=t", "alt": "Detail crop B" }
+        ]
+      }
+    },
+    {
+      "id": "closing-grid",
+      "voiceover": "And finally, the whole composition tiled for reference.",
+      "keywords": ["gallery", "grid", "tiles", "quadrant", "preview"],
+      "content": {
+        "title": "Tiled Reference",
+        "caption": "Same source, four perspectives",
+        "images": [
+          { "url": "https://i.pinimg.com/originals/1f/b6/bb/1fb6bb4cc27a5109fdd6a8acc7495a22.jpg?nii=t", "alt": "Tile 1" },
+          { "url": "https://i.pinimg.com/originals/1f/b6/bb/1fb6bb4cc27a5109fdd6a8acc7495a22.jpg?nii=t", "alt": "Tile 2" },
+          { "url": "https://i.pinimg.com/originals/1f/b6/bb/1fb6bb4cc27a5109fdd6a8acc7495a22.jpg?nii=t", "alt": "Tile 3" },
+          { "url": "https://i.pinimg.com/originals/1f/b6/bb/1fb6bb4cc27a5109fdd6a8acc7495a22.jpg?nii=t", "alt": "Tile 4" }
+        ]
+      }
+    }
+  ]
+}
