@@ -47,18 +47,43 @@ export const localEmbedder = new Embedder(async (texts) => {
   return outputs.map((out) => Array.from(out.data));
 });
 
-async function main() {
-  // Load configuration and input data
-  const config = JSON.parse(await fs.readFile("./storyboard.config.json", "utf-8"));
-  const storyboard = JSON.parse(await fs.readFile("./storyboard.images.json", "utf-8"));
+import { parseArgs } from "node:util";
 
-  // Mock or real embedder instance (e.g., OpenAI, HuggingFace, or custom vector function)
-  const embedder = {
-    async embed(text) {
-      // Replace with your actual embedding function if required
-      return [/* vector embeddings */];
-    }
-  };
+async function main() {
+  const { values } = parseArgs({
+    options: {
+      config: {
+        type: "string",
+        short: "c",
+        default: "./storyboard.config.json",
+      },
+      storyboard: {
+        type: "string",
+        short: "s",
+        default: "./storyboard.images.json",
+      },
+      output: {
+        type: "string",
+        short: "o",
+      },
+      "skip-render": {
+        type: "boolean",
+      },
+    },
+  });
+  
+
+  // Load configuration and input data
+  const config = JSON.parse(await fs.readFile(values.config, "utf-8"));
+  const storyboard = JSON.parse(await fs.readFile(values.storyboard, "utf-8"));
+
+  // CLI overrides
+  if (values.output) {
+    config.outputDir = values.output;
+  }
+  if (values["skip-render"] !== undefined) {
+    config.skipRender = values["skip-render"];
+  }
 
   // Assemble the `opts` object required by runStoryboardEngine
   const opts = {
@@ -67,19 +92,22 @@ async function main() {
     selectionThreshold: config.selectionThreshold,
     skipRender: config.skipRender,
     scoringWeights: config.scoringWeights,
-    storyboard: storyboard,
+    storyboard,
     embedder: localEmbedder,
     voicecfg: config.voicecfg,
-    cfg: config.cfg
+    cfg: config.cfg,
   };
 
   console.log("Starting Storyboard Engine...");
-  
+
   try {
     const result = await runStoryboardEngine(opts);
-    
+
     console.log("Engine execution complete!");
-    console.log(`Discovered Template Families: ${result.templateFamilies.length}`);
+    console.log(
+      `Discovered Template Families: ${result.templateFamilies.length}`
+    );
+
     if (result.videoPath) {
       console.log(`Video rendered successfully to: ${result.videoPath}`);
     } else {
@@ -87,6 +115,7 @@ async function main() {
     }
   } catch (error) {
     console.error("Error executing Storyboard Engine:", error);
+    process.exit(1);
   }
 }
 
