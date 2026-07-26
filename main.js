@@ -50,7 +50,7 @@ export const localEmbedder = new Embedder(async (texts) => {
 async function main() {
   // Load configuration and input data
   const config = JSON.parse(await fs.readFile("./storyboard.config.json", "utf-8"));
-  const storyboard = JSON.parse(await fs.readFile("./storyboard.long.json", "utf-8"));
+  const storyboard = JSON.parse(await fs.readFile("./storyboard.images.json", "utf-8"));
 
   // Mock or real embedder instance (e.g., OpenAI, HuggingFace, or custom vector function)
   const embedder = {
