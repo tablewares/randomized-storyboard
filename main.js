@@ -55,12 +55,10 @@ async function main() {
       config: {
         type: "string",
         short: "c",
-        default: "./storyboard.config.json",
       },
       storyboard: {
         type: "string",
         short: "s",
-        default: "./storyboard.images.json",
       },
       output: {
         type: "string",
@@ -71,7 +69,21 @@ async function main() {
       },
     },
   });
-  
+  if (!values.config || !values.storyboard) {
+    console.error(`
+  Usage:
+    node index.js --config <config.json> --storyboard <storyboard.json> [options]
+
+  Required:
+    -c, --config       Path to storyboard config JSON
+    -s, --storyboard   Path to storyboard JSON
+
+  Optional:
+    -o, --output       Override output directory
+        --skip-render  Skip video rendering
+  `);
+    process.exit(1);
+  }
 
   // Load configuration and input data
   const config = JSON.parse(await fs.readFile(values.config, "utf-8"));
