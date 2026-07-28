@@ -1,0 +1,23 @@
+{
+  "outputDir": "./dist/render",
+  "templatesRoot": "./templates",
+  "selectionThreshold": 0.75,
+  "skipRender": false,
+  "scoringWeights": {
+    "keyCoverage": 0.4,
+    "charFit": 0.25,
+    "keyword": 0.25,
+    "familyHint": 0.1
+  },
+  "voicecfg": {
+    "voice": "george",
+    "alignment": {},
+    "speed": 1,
+    "WORDS_PER_SECOND": 2.5
+  },
+  "cfg": {
+    "render": true,
+    "sfxDir": "./public/sfx",
+    "music": "music.mp3"
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "id": "jwst-cosmic-eye",
+  "seed": "seed-webb-1",
+  "voice": {
+    "provider": "kyutai",
+    "voiceId": "george"
+  },
+  "fps": 30,
+  "globalStyle": {
+    "palette": {
+      "background": "#05060a",
+      "foreground": "#f5f7ff",
+      "primary": "#7dd3fc",
+      "secondary": "#f0abfc",
+      "accent": "#fbbf24",
+      "muted": "#64748b"
+    },
+    "font": {
+      "scale": 1.05
+    }
+  },
+  "scenes": [
+    {
+      "id": "scene-1",
+      "voiceover": "Christmas 2021. A billion-dollar gold mirror launched to see the dawn of time.",
+      "templateId": "gallery/single-image-zoom",
+      "keywords": ["launch", "telescope", "space", "gold", "mirror", "rocket"],
+      "content": {
+        "title": "James Webb Space Telescope",
+        "caption": "Christmas Day 2021 — Ariane 5 launches from Kourou",
+        "image": {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/James_Webb_Space_Telescope_Launch_%28NHQ202112250010%29.jpg/330px-James_Webb_Space_Telescope_Launch_%28NHQ202112250010%29.jpg",
+          "alt": "Ariane 5 rocket launching the James Webb Space Telescope on Christmas Day 2021"
+        }
+      }
+    },
+    {
+      "id": "scene-2",
+      "voiceover": "Six times the light of Hubble. Eighteen gold hexagons unfolding in deep space.",
+      "templateId": "stat/headline",
+      "keywords": ["mirror", "hubble", "hexagonal", "gold", "light", "reflect"],
+      "content": {
+        "number": 6,
+        "label": "X HUBBLE LIGHT",
+        "caption": "18 gold hexagons — a 6.5-metre mirror, unfolded at L2",
+        "source": "NASA / ESA / CSA"
+      }
+    },
+    {
+      "id": "scene-3",
+      "voiceover": "Minus 223 degrees. Five paper-thin shields. SPF one million.",
+      "templateId": "stat/two-up",
+      "keywords": ["cold", "sunshield", "temperature", "infrared", "kelvin"],
+      "content": {
+        "number": -223,
+        "value": "SPF 1,000,000",
+        "label": "DEGREES C",
+        "source": "NASA",
+        "caption": "Five Kapton layers thin as a human hair"
+      }
+    },
+    {
+      "id": "scene-4",
+      "voiceover": "July 2022. Webb's first deep field — galaxies thirteen billion years old.",
+      "templateId": "gallery/single-image-zoom",
+      "keywords": ["deep field", "galaxies", "first image", "universe", "smacs"],
+      "content": {
+        "title": "Webb's First Deep Field",
+        "caption": "SMACS 0723 — galaxies as they were 13.1 billion years ago",
+        "image": {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Webb%27s_First_Deep_Field_%28adjusted%29.jpg/250px-Webb%27s_First_Deep_Field_%28adjusted%29.jpg",
+          "alt": "Webb's First Deep Field — SMACS 0723 galaxy cluster with lensed background galaxies"
+        }
+      }
+    },
+    {
+      "id": "scene-5",
+      "voiceover": "Then the cosmic cliffs — star birth carved into the Carina Nebula.",
+      "templateId": "gallery/single-image-zoom",
+      "keywords": ["carina", "nebula", "star birth", "cosmic cliffs", "ngc 3324"],
+      "content": {
+        "title": "Cosmic Cliffs of Carina",
+        "caption": "NGC 3324 — 8,500 light-years away, NIRCam",
+        "image": {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/NASA%E2%80%99s_Webb_Reveals_Cosmic_Cliffs%2C_Glittering_Landscape_of_Star_Birth.jpg/330px-NASA%E2%80%99s_Webb_Reveals_Cosmic_Cliffs%2C_Glittering_Landscape_of_Star_Birth.jpg",
+          "alt": "Cosmic Cliffs of the Carina Nebula — Webb NIRCam image"
+        }
+      }
+    },
+    {
+      "id": "scene-6",
+      "voiceover": "A dying star's final performance. Southern Ring Nebula, death in infrared.",
+      "templateId": "gallery/single-image-zoom",
+      "keywords": ["nebula", "dying star", "infrared", "southern ring"],
+      "content": {
+        "title": "Dying Star — Southern Ring",
+        "caption": "2,500 light-years away — NIRCam and MIRI side by side",
+        "image": {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Southern_Ring_Nebula_%28NIRCam_and_MIRI_Images_Side_by_Side%29.png/330px-Southern_Ring_Nebula_%28NIRCam_and_MIRI_Images_Side_by_Side%29.png",
+          "alt": "Southern Ring Nebula NIRCam and MIRI images side by side"
+        }
+      }
+    },
+    {
+      "id": "scene-7",
+      "voiceover": "One thousand one hundred and twenty light-years away — water vapour on a gas giant.",
+      "templateId": "stat/badge",
+      "keywords": ["exoplanet", "water", "atmosphere", "wasp-96b", "spectrum"],
+      "content": {
+        "number": 1120,
+        "label": "LIGHT-YEARS",
+        "caption": "Webb's first exoplanet atmosphere spectrum — water on WASP-96b",
+        "source": "NASA / ESA / CSA / STScI"
+      }
+    },
+    {
+      "id": "scene-8",
+      "voiceover": "Webb sees the universe as it was thirteen billion years ago — the dawn of time, in infrared.",
+      "templateId": "quote/pull-quote",
+      "keywords": ["dawn of time", "universe", "billion years", "cosmos", "cosmic"],
+      "content": {
+        "quote": "We are seeing the universe as it was 13 billion years ago — the dawn of time, in infrared.",
+        "source": "NASA, on Webb's first deep field",
+        "caption": "James Webb Space Telescope — NASA / ESA / CSA"
+      }
+    }
+  ]
+}

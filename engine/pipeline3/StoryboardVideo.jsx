@@ -170,7 +170,7 @@ export const StoryboardVideo = ({ input }) => {
         })}
       </TransitionSeries>
 
-      <Audio src={staticFile(audioPath)} />
+      {audioPath && <Audio src={staticFile(audioPath)} />}
 
       {music && <Audio src={staticFile(music.path)} volume={music.volume ?? 0.25} loop />}
 

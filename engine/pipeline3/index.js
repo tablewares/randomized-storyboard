@@ -43,7 +43,11 @@ export async function preparePipeline3(storyboard, pipeline1, pipeline2, cfg) {
   await mkdir(publicDir, { recursive: true });
   
   let audioPath = pipeline1.audioPath;
-  if (path.isAbsolute(audioPath)) {
+  // Guard null audioPath (WPM fallback path 2 in pipeline 1 synthesizes no
+  // audio; audioPath stays null). Without this guard, path.isAbsolute(null)
+  // throws ERR_INVALID_ARG_TYPE and aborts the whole render before Remotion
+  // ever runs — which blocks the WPM-only (silent-video) render entirely.
+  if (audioPath && path.isAbsolute(audioPath)) {
     const audioFilename = path.basename(audioPath);
     const destPath = path.join(publicDir, audioFilename);
     await copyFile(audioPath, destPath);
